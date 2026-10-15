@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-10-15T00:00:00.000Z" agent="opencode" version="24.0.0" type="device">
+  <diagram id="seq-gateway-02" name="Secuencia - API Gateway">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="826" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Diagrama de Secuencia - API Gateway (Spring Cloud Gateway :8089)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=18;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="230" y="0" width="700" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="l-cliente" value="Cliente&lt;br/&gt;(HTTP / REST)" style="shape=umlLifeline;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#FFE6CC;strokeColor=#D79B00;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="60" y="40" width="140" height="620" as="geometry" />
+        </mxCell>
+        <mxCell id="l-gateway" value="API Gateway&lt;br/&gt;:8089" style="shape=umlLifeline;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="330" y="40" width="140" height="620" as="geometry" />
+        </mxCell>
+        <mxCell id="l-eureka" value="discovery-server&lt;br/&gt;:8761" style="shape=umlLifeline;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#F5F5F5;strokeColor=#666666;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="600" y="40" width="140" height="620" as="geometry" />
+        </mxCell>
+        <mxCell id="l-svc" value="Microservicio destino&lt;br/&gt;:8081 / :8082 / :8083" style="shape=umlLifeline;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="870" y="40" width="150" height="620" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" value="1. HTTP GET /customers/{id}" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;verticalAlign=bottom;exitX=0.5;exitY=0.16;entryX=0.5;entryY=0.16;" parent="1" source="l-cliente" target="l-gateway" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="2. Resolver instancia: lb://customer-service" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;verticalAlign=bottom;exitX=0.5;exitY=0.24;entryX=0.5;entryY=0.24;" parent="1" source="l-gateway" target="l-eureka" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m3" value="3. Instancias disponibles (IP:puerto)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;dashed=1;verticalAlign=bottom;exitX=0.5;exitY=0.32;entryX=0.5;entryY=0.32;" parent="1" source="l-eureka" target="l-gateway" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m4" value="4. Proxy de la petición con WebClient (LoadBalancer)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;verticalAlign=bottom;exitX=0.5;exitY=0.40;entryX=0.5;entryY=0.40;" parent="1" source="l-gateway" target="l-svc" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m5" value="5. Respuesta HTTP 200 (JSON)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;dashed=1;verticalAlign=bottom;exitX=0.5;exitY=0.48;entryX=0.5;entryY=0.48;" parent="1" source="l-svc" target="l-gateway" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m6" value="6. Respuesta JSON + cabeceras CORS" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;dashed=1;verticalAlign=bottom;exitX=0.5;exitY=0.56;entryX=0.5;entryY=0.56;" parent="1" source="l-gateway" target="l-cliente" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m7" value="7. (CircuitBreaker abierto / servicio caído) → Fallback: HTTP 503 ServiceUnavailableException" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;dashed=1;verticalAlign=bottom;exitX=0.5;exitY=0.72;entryX=0.5;entryY=0.72;" parent="1" source="l-gateway" target="l-cliente" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="note1" value="Patrones de ruta en el Gateway:&lt;br/&gt;- /customers/** → customer-service:8081&lt;br/&gt;- /bank-accounts/** → bank-account-service:8082&lt;br/&gt;- /credits/** → credit-service:8083&lt;br/&gt;Descubrimiento vía Eureka (LoadBalancer), CORS habilitado," style="text;html=1;align=left;verticalAlign=top;fillColor=#FFF2CC;strokeColor=#D6B656;rounded=1;spacing=6;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="330" y="530" width="440" height="100" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

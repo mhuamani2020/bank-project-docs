@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-10-15T00:00:00.000Z" agent="opencode" version="24.0.0" type="device">
+  <diagram id="seq-disc-config-06" name="Secuencia - Discovery y Config">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="826" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Diagrama de Secuencia - discovery-server (Eureka :8761) y config-server (:8888)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=18;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="180" y="0" width="800" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="l-micro" value="Microservicio&lt;br/&gt;customer / bank-account / credit&lt;br/&gt;(Spring Boot)" style="shape=umlLifeline;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="60" y="40" width="180" height="620" as="geometry" />
+        </mxCell>
+        <mxCell id="l-eureka" value="discovery-server&lt;br/&gt;Eureka :8761" style="shape=umlLifeline;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#F5F5F5;strokeColor=#666666;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="350" y="40" width="160" height="620" as="geometry" />
+        </mxCell>
+        <mxCell id="l-config" value="config-server&lt;br/&gt;Spring Cloud Config :8888" style="shape=umlLifeline;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#F5F5F5;strokeColor=#666666;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="620" y="40" width="180" height="620" as="geometry" />
+        </mxCell>
+        <mxCell id="l-git" value="Repositorio Git remoto&lt;br/&gt;bank-config-repo (main)" style="shape=umlLifeline;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#F5F5F5;strokeColor=#666666;dashed=1;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="900" y="40" width="180" height="620" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" value="1. Arranque del microservicio (bootstrap: consultar config-server)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;verticalAlign=bottom;exitX=0.5;exitY=0.16;entryX=0.5;entryY=0.16;" parent="1" source="l-micro" target="l-config" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="2. GET /{application}/{profile} (ej. bank-account-service/main)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;verticalAlign=bottom;exitX=0.5;exitY=0.24;entryX=0.5;entryY=0.24;" parent="1" source="l-config" target="l-git" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m3" value="3. YAML de configuración (rama main)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;dashed=1;verticalAlign=bottom;exitX=0.5;exitY=0.32;entryX=0.5;entryY=0.32;" parent="1" source="l-git" target="l-config" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m4" value="4. PropertySource centralizado (puertos, MongoDB, Eureka, Resilience4j)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;dashed=1;verticalAlign=bottom;exitX=0.5;exitY=0.40;entryX=0.5;entryY=0.40;" parent="1" source="l-config" target="l-micro" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m5" value="5. POST /eureka/apps (auto-registro del servicio)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;verticalAlign=bottom;exitX=0.5;exitY=0.52;entryX=0.5;entryY=0.52;" parent="1" source="l-micro" target="l-eureka" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m6" value="6. 204 No Content (registro aceptado, instancia UP)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;dashed=1;verticalAlign=bottom;exitX=0.5;exitY=0.60;entryX=0.5;entryY=0.60;" parent="1" source="l-eureka" target="l-micro" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m7" value="7. Heartbeat: PUT /eureka/apps/{app}/{id} (cada 30 s)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;verticalAlign=bottom;exitX=0.5;exitY=0.72;entryX=0.5;entryY=0.72;" parent="1" source="l-micro" target="l-eureka" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m8" value="8. Renovación de lease aceptada" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;dashed=1;verticalAlign=bottom;exitX=0.5;exitY=0.80;entryX=0.5;entryY=0.80;" parent="1" source="l-eureka" target="l-micro" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m9" value="9. (Instancia caída) No se renueva el lease → Eureka la eviciona del registry" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;dashed=1;verticalAlign=bottom;exitX=0.5;exitY=0.90;entryX=0.5;entryY=0.90;" parent="1" source="l-eureka" target="l-micro" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="note1" value="Roles de infraestructura:&lt;br/&gt;- discovery-server (:8761): registry central; los clientes resuelven rutas lb://servicio&lt;br/&gt;- config-server (:8888): sirve configuración centralizada del repo Git bank-config-repo (rama main)&lt;br/&gt;- Cada microservicio publica su /actuator/health; Eureka retira instancias DOWN" style="text;html=1;align=left;verticalAlign=top;fillColor=#FFF2CC;strokeColor=#D6B656;rounded=1;spacing=6;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="60" y="680" width="700" height="90" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

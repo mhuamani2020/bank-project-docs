@@ -1,0 +1,11 @@
+# Repositorio de ENTREGABLES (documentación + colección Postman).
+#
+# El código de cada microservicio vive en su PROPIO repositorio git, tal como exige el
+# enunciado del proyecto. Por eso aquí se ignora todo el contenido del directorio salvo
+# los entregables: los diagramas (docs/) y la colección de pruebas (postman/).
+
+/*
+!/.gitignore
+!/README.md
+!/docs
+!/postman

@@ -1,0 +1,528 @@
+{
+  "info": {
+    "name": "Bank System - Complete Test Scenarios (Phase 1 & 2)",
+    "description": "Colección completa con todos los casos de éxito y de validación de reglas de negocio para customer-service, bank-account-service y credit-service.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "customer_url", "value": "http://localhost:8081", "type": "string" },
+    { "key": "account_url", "value": "http://localhost:8082", "type": "string" },
+    { "key": "credit_url", "value": "http://localhost:8083", "type": "string" },
+    { "key": "personalCustomerId", "value": "cust-pers-01", "type": "string" },
+    { "key": "businessCustomerId", "value": "cust-biz-01", "type": "string" },
+    { "key": "personalVipCustomerId", "value": "cust-vip-01", "type": "string" },
+    { "key": "savingsAccountId", "value": "acc-savings-01", "type": "string" },
+    { "key": "targetAccountId", "value": "acc-savings-02", "type": "string" },
+    { "key": "creditCardId", "value": "cred-card-01", "type": "string" },
+    { "key": "personalCreditId", "value": "cred-pers-01", "type": "string" },
+    { "key": "transactionId", "value": "tx-001", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "1. Customer Service",
+      "item": [
+        {
+          "name": "1.1 Create Personal Customer (Success)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Juan Perez\",\n  \"documentNumber\": \"10203040\",\n  \"customerType\": \"PERSONAL\"\n}"
+            },
+            "url": { "raw": "{{customer_url}}/customers", "host": ["{{customer_url}}"], "path": ["customers"] }
+          }
+        },
+        {
+          "name": "1.2 Create Business Customer (Success)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Inversiones Globales S.A.C.\",\n  \"documentNumber\": \"20123456789\",\n  \"customerType\": \"BUSINESS\"\n}"
+            },
+            "url": { "raw": "{{customer_url}}/customers", "host": ["{{customer_url}}"], "path": ["customers"] }
+          }
+        },
+        {
+          "name": "1.3 Create Personal VIP Customer (Success)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Maria Delgado VIP\",\n  \"documentNumber\": \"40506070\",\n  \"customerType\": \"PERSONAL\",\n  \"profile\": \"VIP\"\n}"
+            },
+            "url": { "raw": "{{customer_url}}/customers", "host": ["{{customer_url}}"], "path": ["customers"] }
+          }
+        },
+        {
+          "name": "1.4 Get All Customers",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{customer_url}}/customers", "host": ["{{customer_url}}"], "path": ["customers"] }
+          }
+        },
+        {
+          "name": "1.5 Get Customer By ID (Success)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{customer_url}}/customers/{{personalCustomerId}}", "host": ["{{customer_url}}"], "path": ["customers", "{{personalCustomerId}}"] }
+          }
+        },
+        {
+          "name": "1.6 Get Customer By ID (Error 404 - Not Found)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{customer_url}}/customers/inexistente-999", "host": ["{{customer_url}}"], "path": ["customers", "inexistente-999"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Credit Service",
+      "item": [
+        {
+          "name": "2.1 Create Personal Credit (Success)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"{{personalCustomerId}}\",\n  \"creditType\": \"PERSONAL_CREDIT\",\n  \"amount\": 5000.0,\n  \"balance\": 5000.0\n}"
+            },
+            "url": { "raw": "{{credit_url}}/credits", "host": ["{{credit_url}}"], "path": ["credits"] }
+          }
+        },
+        {
+          "name": "2.2 Create Personal Credit (Error 400 - Duplicate Personal Credit)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"{{personalCustomerId}}\",\n  \"creditType\": \"PERSONAL_CREDIT\",\n  \"amount\": 3000.0,\n  \"balance\": 3000.0\n}"
+            },
+            "url": { "raw": "{{credit_url}}/credits", "host": ["{{credit_url}}"], "path": ["credits"] }
+          }
+        },
+        {
+          "name": "2.3 Create Business Credit by Personal (Error 400 - Forbidden)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"{{personalCustomerId}}\",\n  \"creditType\": \"BUSINESS_CREDIT\",\n  \"amount\": 20000.0,\n  \"balance\": 20000.0\n}"
+            },
+            "url": { "raw": "{{credit_url}}/credits", "host": ["{{credit_url}}"], "path": ["credits"] }
+          }
+        },
+        {
+          "name": "2.4 Create Business Credit (Success 1)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"{{businessCustomerId}}\",\n  \"creditType\": \"BUSINESS_CREDIT\",\n  \"amount\": 50000.0,\n  \"balance\": 50000.0\n}"
+            },
+            "url": { "raw": "{{credit_url}}/credits", "host": ["{{credit_url}}"], "path": ["credits"] }
+          }
+        },
+        {
+          "name": "2.5 Create Multiple Business Credit (Success 2)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"{{businessCustomerId}}\",\n  \"creditType\": \"BUSINESS_CREDIT\",\n  \"amount\": 100000.0,\n  \"balance\": 100000.0\n}"
+            },
+            "url": { "raw": "{{credit_url}}/credits", "host": ["{{credit_url}}"], "path": ["credits"] }
+          }
+        },
+        {
+          "name": "2.6 Create Personal Credit by Business (Error 400 - Forbidden)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"{{businessCustomerId}}\",\n  \"creditType\": \"PERSONAL_CREDIT\",\n  \"amount\": 8000.0,\n  \"balance\": 8000.0\n}"
+            },
+            "url": { "raw": "{{credit_url}}/credits", "host": ["{{credit_url}}"], "path": ["credits"] }
+          }
+        },
+        {
+          "name": "2.7 Create Credit Card for VIP Customer (Success)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"{{personalVipCustomerId}}\",\n  \"creditType\": \"CREDIT_CARD\",\n  \"amount\": 10000.0,\n  \"balance\": 10000.0\n}"
+            },
+            "url": { "raw": "{{credit_url}}/credits", "host": ["{{credit_url}}"], "path": ["credits"] }
+          }
+        },
+        {
+          "name": "2.8 Validate Has Credit Card (Internal Check)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{credit_url}}/credits/customer/{{personalVipCustomerId}}/has-credit-card", "host": ["{{credit_url}}"], "path": ["credits", "customer", "{{personalVipCustomerId}}", "has-credit-card"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Bank Account Service",
+      "item": [
+        {
+          "name": "3.1 Create Savings Account for Personal (Success)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"{{personalCustomerId}}\",\n  \"accountType\": \"SAVINGS\",\n  \"balance\": 1500.0,\n  \"maintenanceFee\": 0.0,\n  \"maxMovements\": 10\n}"
+            },
+            "url": { "raw": "{{account_url}}/bank-accounts", "host": ["{{account_url}}"], "path": ["bank-accounts"] }
+          }
+        },
+        {
+          "name": "3.2 Create Duplicate Savings for Personal (Error 400 - Only 1 Allowed)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"{{personalCustomerId}}\",\n  \"accountType\": \"SAVINGS\",\n  \"balance\": 500.0,\n  \"maintenanceFee\": 0.0,\n  \"maxMovements\": 10\n}"
+            },
+            "url": { "raw": "{{account_url}}/bank-accounts", "host": ["{{account_url}}"], "path": ["bank-accounts"] }
+          }
+        },
+        {
+          "name": "3.3 Create Savings Account for Business (Error 400 - Forbidden)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"{{businessCustomerId}}\",\n  \"accountType\": \"SAVINGS\",\n  \"balance\": 2000.0,\n  \"maintenanceFee\": 0.0,\n  \"maxMovements\": 10\n}"
+            },
+            "url": { "raw": "{{account_url}}/bank-accounts", "host": ["{{account_url}}"], "path": ["bank-accounts"] }
+          }
+        },
+        {
+          "name": "3.4 Create Fixed Term for Business (Error 400 - Forbidden)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"{{businessCustomerId}}\",\n  \"accountType\": \"FIXED_TERM\",\n  \"balance\": 5000.0,\n  \"maintenanceFee\": 0.0,\n  \"maxMovements\": 1\n}"
+            },
+            "url": { "raw": "{{account_url}}/bank-accounts", "host": ["{{account_url}}"], "path": ["bank-accounts"] }
+          }
+        },
+        {
+          "name": "3.5 Create Multiple Current Accounts for Business (Success 1)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"{{businessCustomerId}}\",\n  \"accountType\": \"CURRENT\",\n  \"balance\": 8000.0,\n  \"maintenanceFee\": 30.0,\n  \"maxMovements\": 50,\n  \"holders\": [\"Inversiones Globales S.A.C.\"],\n  \"signatories\": [\"Maria Delgado\"]\n}"
+            },
+            "url": { "raw": "{{account_url}}/bank-accounts", "host": ["{{account_url}}"], "path": ["bank-accounts"] }
+          }
+        },
+        {
+          "name": "3.6 Create Multiple Current Accounts for Business (Success 2)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"{{businessCustomerId}}\",\n  \"accountType\": \"CURRENT\",\n  \"balance\": 12000.0,\n  \"maintenanceFee\": 30.0,\n  \"maxMovements\": 50,\n  \"holders\": [\"Inversiones Globales S.A.C.\", \"Comercial Norte E.I.R.L.\"],\n  \"signatories\": []\n}"
+            },
+            "url": { "raw": "{{account_url}}/bank-accounts", "host": ["{{account_url}}"], "path": ["bank-accounts"] }
+          }
+        },
+        {
+          "name": "3.7 Create VIP Account WITHOUT Credit Card (Error 400 - Missing Card)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"{{personalCustomerId}}\",\n  \"accountType\": \"VIP\",\n  \"balance\": 1000.0,\n  \"maintenanceFee\": 0.0,\n  \"maxMovements\": 20\n}"
+            },
+            "url": { "raw": "{{account_url}}/bank-accounts", "host": ["{{account_url}}"], "path": ["bank-accounts"] }
+          }
+        },
+        {
+          "name": "3.8 Create VIP Account WITH Credit Card (Success)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"{{personalVipCustomerId}}\",\n  \"accountType\": \"VIP\",\n  \"balance\": 5000.0,\n  \"maintenanceFee\": 0.0,\n  \"maxMovements\": 25\n}"
+            },
+            "url": { "raw": "{{account_url}}/bank-accounts", "host": ["{{account_url}}"], "path": ["bank-accounts"] }
+          }
+        },
+        {
+          "name": "3.9 Create Account with Inexistent Customer (Error 400 - Not Found)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"id-fantasma-999\",\n  \"accountType\": \"SAVINGS\",\n  \"balance\": 100.0,\n  \"maintenanceFee\": 0.0,\n  \"maxMovements\": 10\n}"
+            },
+            "url": { "raw": "{{account_url}}/bank-accounts", "host": ["{{account_url}}"], "path": ["bank-accounts"] }
+          }
+        },
+        {
+          "name": "3.10 Create Fixed Term Account for Personal (Success)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "description": "Plazo fijo: libre de comision y con un unico movimiento mensual, en el dia indicado por fixedTermWithdrawalDay.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"{{personalCustomerId}}\",\n  \"accountType\": \"FIXED_TERM\",\n  \"balance\": 2500.0,\n  \"maintenanceFee\": 0.0,\n  \"fixedTermWithdrawalDay\": 15\n}"
+            },
+            "url": { "raw": "{{account_url}}/bank-accounts", "host": ["{{account_url}}"], "path": ["bank-accounts"] }
+          }
+        },
+        {
+          "name": "3.11 Get Account Available Balance (Success)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Consulta del saldo disponible de una cuenta bancaria (Parte I).",
+            "url": { "raw": "{{account_url}}/bank-accounts/{{savingsAccountId}}/balance", "host": ["{{account_url}}"], "path": ["bank-accounts", "{{savingsAccountId}}", "balance"] }
+          }
+        },
+        {
+          "name": "3.12 Get Account Available Balance (Error 404 - Not Found)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{account_url}}/bank-accounts/acc-inexistente-999/balance", "host": ["{{account_url}}"], "path": ["bank-accounts", "acc-inexistente-999", "balance"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Transactions & Transfers",
+      "item": [
+        {
+          "name": "4.1 Deposit Transaction (Success)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transactionType\": \"DEPOSIT\",\n  \"amount\": 250.0\n}"
+            },
+            "url": { "raw": "{{account_url}}/bank-accounts/{{savingsAccountId}}/transactions", "host": ["{{account_url}}"], "path": ["bank-accounts", "{{savingsAccountId}}", "transactions"] }
+          }
+        },
+        {
+          "name": "4.2 Withdrawal Transaction (Success)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transactionType\": \"WITHDRAWAL\",\n  \"amount\": 100.0\n}"
+            },
+            "url": { "raw": "{{account_url}}/bank-accounts/{{savingsAccountId}}/transactions", "host": ["{{account_url}}"], "path": ["bank-accounts", "{{savingsAccountId}}", "transactions"] }
+          }
+        },
+        {
+          "name": "4.3 Withdrawal Exceeding Balance (Error 400 - Insufficient Balance)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transactionType\": \"WITHDRAWAL\",\n  \"amount\": 999999.0\n}"
+            },
+            "url": { "raw": "{{account_url}}/bank-accounts/{{savingsAccountId}}/transactions", "host": ["{{account_url}}"], "path": ["bank-accounts", "{{savingsAccountId}}", "transactions"] }
+          }
+        },
+        {
+          "name": "4.4 Transfer Between Accounts (Success)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sourceAccountId\": \"{{savingsAccountId}}\",\n  \"targetAccountId\": \"{{targetAccountId}}\",\n  \"amount\": 150.0\n}"
+            },
+            "url": { "raw": "{{account_url}}/bank-accounts/transfers", "host": ["{{account_url}}"], "path": ["bank-accounts", "transfers"] }
+          }
+        },
+        {
+          "name": "4.5 Get All Account Transactions",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{account_url}}/bank-accounts/{{savingsAccountId}}/transactions", "host": ["{{account_url}}"], "path": ["bank-accounts", "{{savingsAccountId}}", "transactions"] }
+          }
+        },
+        {
+          "name": "4.6 Get All Transactions (FindAll global)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{account_url}}/bank-accounts/transactions", "host": ["{{account_url}}"], "path": ["bank-accounts", "transactions"] }
+          }
+        },
+        {
+          "name": "4.7 Get Transaction By ID (FindById)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Usa la variable transactionId: copia el id devuelto por 4.6.",
+            "url": { "raw": "{{account_url}}/bank-accounts/transactions/{{transactionId}}", "host": ["{{account_url}}"], "path": ["bank-accounts", "transactions", "{{transactionId}}"] }
+          }
+        },
+        {
+          "name": "4.8 Update Transaction (FindAndModify)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "description": "Corrige importe o tipo de un movimiento existente.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transactionType\": \"WITHDRAWAL\",\n  \"amount\": 150.0\n}"
+            },
+            "url": { "raw": "{{account_url}}/bank-accounts/transactions/{{transactionId}}", "host": ["{{account_url}}"], "path": ["bank-accounts", "transactions", "{{transactionId}}"] }
+          }
+        },
+        {
+          "name": "4.9 Delete Transaction",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "description": "Debe responder 204 No Content.",
+            "url": { "raw": "{{account_url}}/bank-accounts/transactions/{{transactionId}}", "host": ["{{account_url}}"], "path": ["bank-accounts", "transactions", "{{transactionId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Credit Payments, Card Consumption & Balances",
+      "item": [
+        {
+          "name": "5.1 Payment on Credit Card (Success)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "description": "El pago incrementa el saldo disponible sin superar el limite contratado.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 500.0\n}"
+            },
+            "url": { "raw": "{{credit_url}}/credits/{{creditCardId}}/payments", "host": ["{{credit_url}}"], "path": ["credits", "{{creditCardId}}", "payments"] }
+          }
+        },
+        {
+          "name": "5.2 Payment with Amount 0 (Error 400 - Invalid Amount)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 0\n}"
+            },
+            "url": { "raw": "{{credit_url}}/credits/{{creditCardId}}/payments", "host": ["{{credit_url}}"], "path": ["credits", "{{creditCardId}}", "payments"] }
+          }
+        },
+        {
+          "name": "5.3 Payment on Personal Credit (Success)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 1000.0\n}"
+            },
+            "url": { "raw": "{{credit_url}}/credits/{{personalCreditId}}/payments", "host": ["{{credit_url}}"], "path": ["credits", "{{personalCreditId}}", "payments"] }
+          }
+        },
+        {
+          "name": "5.4 Consumption on Credit Card (Success)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "description": "El consumo reduce el saldo disponible y debe caber dentro del limite de la tarjeta.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 1500.0\n}"
+            },
+            "url": { "raw": "{{credit_url}}/credits/{{creditCardId}}/consumptions", "host": ["{{credit_url}}"], "path": ["credits", "{{creditCardId}}", "consumptions"] }
+          }
+        },
+        {
+          "name": "5.5 Consumption Exceeding Credit Limit (Error 400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "description": "El importe no puede superar el saldo disponible de la tarjeta.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 999999\n}"
+            },
+            "url": { "raw": "{{credit_url}}/credits/{{creditCardId}}/consumptions", "host": ["{{credit_url}}"], "path": ["credits", "{{creditCardId}}", "consumptions"] }
+          }
+        },
+        {
+          "name": "5.6 Consumption on Personal Credit (Error 400 - Not a Card)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "description": "Solo CREDIT_CARD admiten consumos.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 100.0\n}"
+            },
+            "url": { "raw": "{{credit_url}}/credits/{{personalCreditId}}/consumptions", "host": ["{{credit_url}}"], "path": ["credits", "{{personalCreditId}}", "consumptions"] }
+          }
+        },
+        {
+          "name": "5.7 Get Available Balance of Credit Card",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{credit_url}}/credits/{{creditCardId}}/available-balance", "host": ["{{credit_url}}"], "path": ["credits", "{{creditCardId}}", "available-balance"] }
+          }
+        },
+        {
+          "name": "5.8 Get Movements of Credit Card",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Historial de consumos y pagos del producto de credito.",
+            "url": { "raw": "{{credit_url}}/credits/{{creditCardId}}/movements", "host": ["{{credit_url}}"], "path": ["credits", "{{creditCardId}}", "movements"] }
+          }
+        },
+        {
+          "name": "5.9 Get Available Balance (Error 404 - Not Found)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{credit_url}}/credits/cred-inexistente-999/available-balance", "host": ["{{credit_url}}"], "path": ["credits", "cred-inexistente-999", "available-balance"] }
+          }
+        }
+      ]
+    }
+  ]
+}
