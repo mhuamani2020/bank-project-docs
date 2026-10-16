@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-10-16T00:00:00.000Z" agent="opencode" version="24.0.0" type="device">
+  <diagram id="flow-testing-11" name="Flujo de pruebas (documentacion)">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1440" pageHeight="780" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Flujo de pruebas y verificación segun los requisitos de la documentación (Partes I, II y III)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=17;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="160" y="10" width="1120" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="hA" value="&lt;b&gt;A) PRUEBAS UNITARIAS Y COBERTURA DE CÓDIGO&lt;/b&gt;&lt;br&gt;Parte II — línea 63 (Checkstyle) y línea 68 (tests unitarios + JaCoCo) · Parte III — líneas 94–95 (métodos públicos nuevos con mocks + presentar coverage)" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;spacing=6;fillColor=#6C8EBF;strokeColor=#3A5378;fontColor=#FFFFFF;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="40" y="55" width="660" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="a1" value="&lt;b&gt;1. Desarrollar la funcionalidad&lt;/b&gt;&lt;br&gt;Nuevas funcionalidades con programación funcional y reactiva (RxJava 3 + Spring)." style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacing=8;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="40" y="115" width="660" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="a2" value="&lt;b&gt;2. Escribir pruebas unitarias de los métodos públicos nuevos&lt;/b&gt;&lt;br&gt;Parte III (línea 94): cada método público nuevo con su prueba unitaria y con &lt;b&gt;mocks&lt;/b&gt; (Mockito) donde corresponda." style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacing=8;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="40" y="180" width="660" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="a3" value="&lt;b&gt;3. Ejecutar la build de cada microservicio (Maven)&lt;/b&gt;&lt;br&gt;&lt;code&gt;mvnw verify&lt;/code&gt; → &lt;b&gt;Checkstyle&lt;/b&gt; (Parte II, línea 63) valida el estilo del código." style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacing=8;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="40" y="250" width="660" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="a4" value="&lt;b&gt;4. Surefire ejecuta los tests unitarios&lt;/b&gt;&lt;br&gt;9 módulos Maven · 269 pruebas · 0 fallos / 0 errores." style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacing=8;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="40" y="315" width="660" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="a5" value="&lt;b&gt;5. JaCoCo mide la cobertura&lt;/b&gt;&lt;br&gt;Parte II (línea 68): reporte de cobertura de &lt;i&gt;todo el código desarrollado&lt;/i&gt;." style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacing=8;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="40" y="380" width="660" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="a6" value="&lt;b&gt;6. Reporte de cobertura por módulo&lt;/b&gt;&lt;br&gt;&lt;code&gt;&amp;lt;modulo&amp;gt;/target/site/jacoco/index.html&lt;/code&gt; (+ jacoco.xml / CSV)." style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacing=8;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="40" y="445" width="660" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="a7" value="&lt;b&gt;7. Presentar el reporte de coverage&lt;/b&gt; — Parte III, línea 95." style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacing=8;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="40" y="510" width="660" height="45" as="geometry" />
+        </mxCell>
+
+        <mxCell id="hB" value="&lt;b&gt;B) VERIFICACIÓN FUNCIONAL DE LAS APIs CON POSTMAN&lt;/b&gt;&lt;br&gt;Parte I — línea 46 (sin interfaz gráfica; se verifica con Postman) · Parte III — línea 112 (repositorio de proyectos Postman)" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;spacing=6;fillColor=#D79B00;strokeColor=#B36A00;fontColor=#FFFFFF;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="740" y="55" width="660" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="b1" value="&lt;b&gt;1. Mantener el repositorio Postman&lt;/b&gt;&lt;br&gt;Colección con las pruebas de todas las APIs (Parte III, línea 112)." style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacing=8;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="740" y="115" width="660" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="b2" value="&lt;b&gt;2. Preparar el entorno&lt;/b&gt;&lt;br&gt;Infra + plataforma + servicios (&lt;code&gt;docker compose up -d --build&lt;/code&gt;); verificar Eureka :8761." style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacing=8;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="740" y="180" width="660" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="b3" value="&lt;b&gt;3. FASE 0 · Autenticación (carpeta «0. Auth Service»)&lt;/b&gt;&lt;br&gt;POST /auth/login → JWT → guarda &lt;b&gt;{{token}}&lt;/b&gt;. &lt;i&gt;Ejecutar siempre primero.&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacing=8;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="740" y="245" width="660" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="b4" value="&lt;b&gt;4. Ejecutar las carpetas 1 → 7 (éxito y error)&lt;/b&gt;&lt;br&gt;1 Clientes · 2 Créditos · 3 Cuentas · 4 Movimientos y transferencias ·&lt;br&gt;5 Pagos y consumos de crédito · 6 Tarjetas de débito y reportes · 7 Yanki." style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacing=8;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="740" y="310" width="660" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="b5" value="&lt;b&gt;5. Validar las respuestas&lt;/b&gt;&lt;br&gt;Pestaña &lt;b&gt;Tests&lt;/b&gt; de cada petición: 200 / 201 / 202 / 400 / 404." style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacing=8;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="740" y="390" width="660" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="b6" value="&lt;b&gt;6. Yanki asíncrono (Kafka)&lt;/b&gt;&lt;br&gt;top-up / withdraw → 202 → topics &lt;code&gt;wallet-operations&lt;/code&gt; / &lt;code&gt;wallet-operation-results&lt;/code&gt;; reconsultar el saldo." style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacing=8;fillColor=#E1D5E7;strokeColor=#9673A6;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="740" y="455" width="660" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ent" value="&lt;b&gt;ENTREGABLES&lt;/b&gt; (Parte I, línea 55 · Parte III, líneas 112–113)&lt;br&gt;• Un repositorio Git por microservicio (entrega individual) + &lt;code&gt;bank-resilience-commons&lt;/code&gt; + &lt;code&gt;bank-config-repo&lt;/code&gt;&lt;br&gt;• Repositorio con los proyectos Postman para las pruebas de las APIs&lt;br&gt;• Reporte de cobertura (JaCoCo) presentado&lt;br&gt;• Diagramas draw.io (diseño y secuencia) y contratos OpenAPI" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacing=8;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="40" y="600" width="1360" height="150" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#6C8EBF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="a1" target="a2" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#6C8EBF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="a2" target="a3" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#6C8EBF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="a3" target="a4" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#6C8EBF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="a4" target="a5" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#6C8EBF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="a5" target="a6" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#6C8EBF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="a6" target="a7" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#82B366;exitX=0.5;exitY=1;entryX=0.25;entryY=0;" parent="1" source="a7" target="ent" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <mxCell id="f1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#D79B00;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="b1" target="b2" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="f2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#D79B00;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="b2" target="b3" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="f3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#D79B00;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="b3" target="b4" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="f4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#D79B00;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="b4" target="b5" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="f5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#D79B00;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="b5" target="b6" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="f6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#82B366;exitX=0.5;exitY=1;entryX=0.75;entryY=0;" parent="1" source="b6" target="ent" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
