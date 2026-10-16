@@ -1,0 +1,40 @@
+# ============================================================================
+# Configuración de customer-service para el entorno DOCKER.
+# Igual que bank-config-repo/customer-service.yml pero con los hostnames de la
+# red de docker-compose (mongodb, redis, discovery-server) en lugar de
+# localhost. Lo sirve el config-server en modo "native".
+# ============================================================================
+server:
+  port: 8081
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://mongodb:27017/customer_db
+    # Redis (Parte III) — caché de datos maestros (catálogo de clientes)
+    redis:
+      host: redis
+      port: 6379
+
+app:
+  cache:
+    # Tiempo de vida (segundos) de las entradas del catálogo de clientes en Redis.
+    customer-ttl-seconds: 300
+  jwt:
+    # Clave simétrica compartida con auth-service (valida el JWT como Resource Server).
+    secret: "bank-system-super-secret-key-for-jwt-hs256-2026-nttdata"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-server:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics

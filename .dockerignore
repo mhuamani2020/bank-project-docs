@@ -1,0 +1,10 @@
+# Contexto de build = raíz del proyecto. Se excluye todo lo que no hace falta
+# para compilar los microservicios, para acelerar el envío de contexto a Docker.
+
+**/target
+**/.git
+**/.idea
+**/*.iml
+**/*.log
+**/node_modules
+**/.mvn/wrapper/maven-wrapper.jar

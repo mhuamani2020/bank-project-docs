@@ -1,0 +1,270 @@
+# ============================================================================
+# docker-compose.yml — Orquestación completa del Sistema Bancario de
+# Microservicios (Parte II: "Cada microservicio deberá estar en un contenedor
+# independiente en Docker").
+#
+# Levanta:
+#   Infraestructura : MongoDB, Kafka (KRaft, sin ZooKeeper), Redis
+#   Plataforma      : discovery-server (Eureka), config-server, api-gateway
+#   Negocio         : auth, customer, bank-account, credit, yanki
+#
+# Uso:
+#   docker compose up -d --build        # construye y levanta todo
+#   docker compose ps                   # estado de los contenedores
+#   docker compose logs -f <servicio>   # logs de un servicio
+#   docker compose down -v              # detiene y borra volúmenes
+#
+# Red interna (hostnames): mongodb, kafka, redis, discovery-server,
+# config-server, api-gateway y los microservicios por su nombre.
+#
+# Nota sobre configuración: cada servicio toma su configuración del
+# config-server, que en Docker se ejecuta con el perfil "native" sirviendo el
+# repositorio deploy/config-repo (valores con los hostnames de esta red).
+# ============================================================================
+name: bank-system
+
+services:
+
+  # --------------------------------------------------------------------------
+  # INFRAESTRUCTURA
+  # --------------------------------------------------------------------------
+  mongodb:
+    image: mongo:7.0
+    container_name: bank-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+    networks:
+      - bank-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: bank-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    networks:
+      - bank-net
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.1
+    container_name: bank-kafka
+    ports:
+      - "9092:9092"
+    environment:
+      # Modo KRaft (sin ZooKeeper), un solo nodo
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-broker-api-versions --bootstrap-server localhost:9092 > /dev/null 2>&1"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 30s
+    networks:
+      - bank-net
+
+  # --------------------------------------------------------------------------
+  # PLATAFORMA
+  # --------------------------------------------------------------------------
+  discovery-server:
+    build:
+      context: .
+      dockerfile: discovery-server/Dockerfile
+    image: bank-system/discovery-server:latest
+    container_name: bank-discovery-server
+    ports:
+      - "8761:8761"
+    restart: unless-stopped
+    networks:
+      - bank-net
+
+  config-server:
+    build:
+      context: .
+      dockerfile: config-server/Dockerfile
+    image: bank-system/config-server:latest
+    container_name: bank-config-server
+    ports:
+      - "8888:8888"
+    environment:
+      # Perfil "native": sirve el repositorio local montado en /config-repo
+      SPRING_PROFILES_ACTIVE: native
+      SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS: "file:/config-repo"
+    volumes:
+      - ./deploy/config-repo:/config-repo:ro
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - bank-net
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: api-gateway/Dockerfile
+    image: bank-system/api-gateway:latest
+    container_name: bank-api-gateway
+    ports:
+      - "8089:8089"
+    environment:
+      # El gateway NO usa config-server: su application.yml es local, así que
+      # aquí solo se apunta Eureka a la red Docker.
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://discovery-server:8761/eureka/"
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - bank-net
+
+  # --------------------------------------------------------------------------
+  # NEGOCIO
+  # --------------------------------------------------------------------------
+  auth-service:
+    build:
+      context: .
+      dockerfile: auth-service/Dockerfile
+    image: bank-system/auth-service:latest
+    container_name: bank-auth-service
+    ports:
+      - "8084:8084"
+    environment:
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://config-server:8888"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://discovery-server:8761/eureka/"
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - bank-net
+
+  customer-service:
+    build:
+      context: .
+      dockerfile: customer-service/Dockerfile
+    image: bank-system/customer-service:latest
+    container_name: bank-customer-service
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://config-server:8888"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://discovery-server:8761/eureka/"
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - bank-net
+
+  bank-account-service:
+    build:
+      context: .
+      dockerfile: bank-account-service/Dockerfile
+    image: bank-system/bank-account-service:latest
+    container_name: bank-bank-account-service
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://config-server:8888"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://discovery-server:8761/eureka/"
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - bank-net
+
+  credit-service:
+    build:
+      context: .
+      dockerfile: credit-service/Dockerfile
+    image: bank-system/credit-service:latest
+    container_name: bank-credit-service
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://config-server:8888"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://discovery-server:8761/eureka/"
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - bank-net
+
+  yanki-service:
+    build:
+      context: .
+      dockerfile: yanki-service/Dockerfile
+    image: bank-system/yanki-service:latest
+    container_name: bank-yanki-service
+    ports:
+      - "8085:8085"
+    environment:
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://config-server:8888"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://discovery-server:8761/eureka/"
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - bank-net
+
+networks:
+  bank-net:
+    driver: bridge
+
+volumes:
+  mongo-data:

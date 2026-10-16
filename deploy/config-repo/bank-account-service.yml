@@ -1,0 +1,83 @@
+# ============================================================================
+# Configuración de bank-account-service para el entorno DOCKER.
+# Igual que bank-config-repo/bank-account-service.yml pero con los hostnames de
+# la red de docker-compose (mongodb, kafka, customer-service, credit-service,
+# discovery-server) en lugar de localhost.
+# ============================================================================
+server:
+  port: 8082
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://mongodb:27017/bank_account_db
+      auto-index-creation: true
+  # Kafka (Parte III) — arquitectura orientada a eventos
+  kafka:
+    bootstrap-servers: kafka:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: bank-account-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+app:
+  urls:
+    customer-service: "http://customer-service:8081/customers/"
+    credit-service: "http://credit-service:8083/credits/"
+  accounts:
+    # Parte II: monto mínimo de apertura de las cuentas bancarias (puede ser 0).
+    minimum-opening-amount: 0.0
+  # Parte III: arquitectura orientada a eventos con Kafka.
+  kafka:
+    topics:
+      account-transactions: bank-account-transactions
+      wallet-operations: wallet-operations
+      wallet-operation-results: wallet-operation-results
+  jwt:
+    secret: "bank-system-super-secret-key-for-jwt-hs256-2026-nttdata"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-server:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true
+
+# Estándar de resiliencia (circuit breakers) — bank-resilience-commons
+resilience4j:
+  circuitbreaker:
+    instances:
+      customerServiceCB:
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+      creditServiceCB:
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+  timelimiter:
+    instances:
+      customerServiceCB:
+        timeoutDuration: 2s
+        cancelRunningFuture: true
+      creditServiceCB:
+        timeoutDuration: 2s
+        cancelRunningFuture: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,circuitbreakers,circuitbreakerevents

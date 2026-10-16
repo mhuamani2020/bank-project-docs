@@ -1,0 +1,47 @@
+# ============================================================================
+# Configuración de yanki-service para el entorno DOCKER.
+# Igual que bank-config-repo/yanki-service.yml pero con los hostnames de la red
+# de docker-compose (mongodb, kafka, discovery-server) en lugar de localhost.
+# ============================================================================
+server:
+  port: 8085
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://mongodb:27017/yanki_db
+      auto-index-creation: true
+  # Kafka (Parte III) — único canal de comunicación con bank-account-service.
+  kafka:
+    bootstrap-servers: kafka:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: yanki-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+app:
+  kafka:
+    topics:
+      wallet-operations: wallet-operations
+      wallet-operation-results: wallet-operation-results
+  jwt:
+    secret: "bank-system-super-secret-key-for-jwt-hs256-2026-nttdata"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-server:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics

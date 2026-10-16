@@ -11,7 +11,13 @@ exige el enunciado; aquí solo se versionan la documentación y los artefactos d
 | Ruta | Descripción |
 |---|---|
 | `docs/diagrams/` | Diagramas en formato **draw.io (XML)**: diseño de la solución, diagramas de secuencia por microservicio y diagramas UML (clases y casos de uso). |
+| `docs/historias-de-usuario.md` | Cada funcionalidad del sistema descrita como **historia de usuario** con sus criterios de aceptación. |
 | `postman/` | Colección de **Postman** con los escenarios de éxito y de validación de reglas de negocio de todos los servicios, incluido el login JWT. |
+| `docker-compose.yml` | Orquestación de **todos los contenedores**: infraestructura (MongoDB, Kafka, Redis), plataforma (discovery, config, gateway) y microservicios de negocio. |
+| `deploy/config-repo/` | Configuración externalizada **específica del entorno Docker** (hostnames de la red), servida por el `config-server` en modo `native`. |
+
+> Cada repositorio de microservicio incluye su **propio `Dockerfile`** (build multi-etapa), tal
+> como exige la Parte II: “cada microservicio deberá estar en un contenedor independiente”.
 
 ## Repositorios de la solución
 
@@ -130,6 +136,59 @@ está, se lee de MongoDB y se refresca la caché; al actualizar o eliminar se in
 entrada. El TTL y la conexión se externalizan en `bank-config-repo` (`app.cache.*`,
 `spring.data.redis.*`). Los fallos de Redis son **best-effort**: el servicio sigue respondiendo
 desde MongoDB.
+
+## Despliegue con Docker (Parte II)
+
+Los microservicios pueden levantarse en **contenedores independientes** (requerimiento
+“deseable” de la Parte II). Todo el sistema se orquesta con `docker-compose.yml`:
+
+```bash
+# Construir las imágenes y levantar todo (infraestructura + plataforma + negocio)
+docker compose up -d --build
+
+# Ver el estado de los contenedores
+docker compose ps
+
+# Seguir los logs de un servicio concreto
+docker compose logs -f bank-account-service
+
+# Detener todo (y borrar los volúmenes de datos con -v)
+docker compose down
+```
+
+### Contenedores
+
+| Contenedor | Imagen / build | Puerto host | Rol |
+|---|---|---|---|
+| `bank-mongodb` | `mongo:7.0` | 27017 | Base de datos **documental** (una base por servicio). |
+| `bank-redis` | `redis:7-alpine` | 6379 | **Caché** de datos maestros (Parte III). |
+| `bank-kafka` | `confluentinc/cp-kafka:7.6.1` | 9092 | **Message broker** en modo **KRaft** (sin ZooKeeper). |
+| `bank-discovery-server` | `discovery-server/Dockerfile` | 8761 | **Eureka** (registro de APIs). |
+| `bank-config-server` | `config-server/Dockerfile` | 8888 | **Config Server** en perfil `native`. |
+| `bank-api-gateway` | `api-gateway/Dockerfile` | 8089 | **API Gateway** (enruta y propaga el JWT). |
+| `bank-auth-service` | `auth-service/Dockerfile` | 8084 | Autenticación **JWT**. |
+| `bank-customer-service` | `customer-service/Dockerfile` | 8081 | Clientes (con caché **Redis**). |
+| `bank-bank-account-service` | `bank-account-service/Dockerfile` | 8082 | Productos pasivos + tarjetas de débito. |
+| `bank-credit-service` | `credit-service/Dockerfile` | 8083 | Productos activos. |
+| `bank-yanki-service` | `yanki-service/Dockerfile` | 8085 | Monedero móvil **Yanki**. |
+
+### Cómo se resuelve la configuración
+
+- El `config-server` se ejecuta con el perfil **`native`** y sirve el repositorio
+  `deploy/config-repo/` (montado en `/config-repo`), que contiene los **mismos valores** de
+  `bank-config-repo` pero con los **hostnames de la red Docker** (`mongodb`, `kafka`, `redis`,
+  `discovery-server`, `customer-service`, `credit-service`) en lugar de `localhost`.
+- Cada microservicio apunta al config-server con
+  `SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888` y a Eureka con
+  `EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka/`.
+- `api-gateway` no usa config-server (su `application.yml` es local); solo se le ajusta la URL
+  de Eureka por variable de entorno.
+- El arranque se ordena con `depends_on` + *healthchecks* (`service_healthy`), de modo que los
+  servicios esperan a MongoDB/Redis/Kafka y a la plataforma antes de iniciar.
+
+> **Requisito:** el *build* multi-etapa compila cada servicio con Maven e instala antes la
+> librería compartida `bank-resilience-commons`; por eso el **contexto de build** de cada
+> `Dockerfile` es la **raíz** del proyecto (`docker compose` ya lo configura así).
 
 ## Pruebas manuales con Postman
 
