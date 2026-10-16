@@ -22,6 +22,7 @@ Diagramas de la **Parte I, Parte II y Parte III** del proyecto. Todos los archiv
 | `08-uml-use-case-diagram.drawio` | Diagrama de casos de uso: cliente y sistemas externos, casos de negocio e incluidos/extendidos (validar cliente, validar tarjeta, comisión por exceso). |
 | `09-sequence-security-jwt.drawio` | **Parte III** — Secuencia de seguridad JWT: login en auth-service (validación de credenciales y firma del token HS256), propagación del token por el gateway y validación en cada microservicio como OAuth2 Resource Server (incluye *token relay* en las llamadas REST salientes). |
 | `10-sequence-yanki-kafka.drawio` | **Parte III** — Secuencia del monedero Yanki: registro sin ser cliente, pagos entre monederos por celular y operaciones asíncronas de carga/retiro (`202 Accepted`) mediante los topics `wallet-operations` y `wallet-operation-results` (sin llamadas REST entre servicios nuevos). |
+| `11-testing-flow-postman.drawio` | **Flujo de pruebas (verificación)** — Recorrido end-to-end de la colección Postman: preparación del entorno (infra + plataforma + servicios), autenticación para obtener el JWT (`{{token}}`), y las 7 carpetas en orden (clientes → créditos → cuentas → movimientos/transferencias → pagos/consumos → tarjetas de débito y reportes → Yanki con Kafka), indicando escenarios de éxito y de error (400/404), el encadenamiento de variables y las notas para ejecutarlo. |
 
 ## Colores (capas)
 
