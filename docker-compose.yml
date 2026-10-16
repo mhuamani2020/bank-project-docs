@@ -131,10 +131,13 @@ services:
     ports:
       - "8089:8089"
     environment:
-      # El gateway NO usa config-server: su application.yml es local, así que
+      # El gateway toma su configuración (puerto y rutas) del config-server;
       # aquí solo se apunta Eureka a la red Docker.
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://config-server:8888"
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://discovery-server:8761/eureka/"
     depends_on:
+      config-server:
+        condition: service_healthy
       discovery-server:
         condition: service_healthy
     restart: unless-stopped

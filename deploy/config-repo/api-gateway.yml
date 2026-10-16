@@ -1,0 +1,61 @@
+# ============================================================================
+# Configuración del API Gateway para el entorno DOCKER.
+# Igual que bank-config-repo/api-gateway.yml pero con el hostname de la red de
+# docker-compose (discovery-server) en lugar de localhost. Lo sirve el
+# config-server en modo "native".
+# ============================================================================
+server:
+  port: 8089
+
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      # Autenticación con JWT (Parte III): el gateway NO valida el token, solo
+      # enruta y lo PROPAGA. Spring Cloud Gateway reenvía por defecto las
+      # cabeceras de la petición original (incluida Authorization), de modo que
+      # cada microservicio de negocio valida él mismo el JWT como OAuth2
+      # Resource Server. El cliente obtiene el token en POST /auth/login.
+      routes:
+        # Ruta para Auth Service (login / registro, endpoints públicos)
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth, /auth/**
+
+        # Ruta para Customer Service
+        - id: customer-service
+          uri: lb://CUSTOMER-SERVICE
+          predicates:
+            - Path=/customers, /customers/**
+
+        # Ruta para Bank Account Service (cuentas, movimientos, transferencias,
+        # tarjetas de débito y sus reportes)
+        - id: bank-account-service
+          uri: lb://BANK-ACCOUNT-SERVICE
+          predicates:
+            - Path=/bank-accounts, /bank-accounts/**, /debit-cards, /debit-cards/**, /reports/bank-accounts/**, /reports/debit-card/**
+
+        # Ruta para Credit Service (créditos, movimientos, pagos, consumos y reportes)
+        - id: credit-service
+          uri: lb://CREDIT-SERVICE
+          predicates:
+            - Path=/credits, /credits/**, /customer/**, /reports/credits/**, /reports/credit-card/**
+
+        # Ruta para Yanki Service (monedero móvil: registro, pagos entre
+        # monederos y carga/retiro de saldo contra la tarjeta de débito)
+        - id: yanki-service
+          uri: lb://YANKI-SERVICE
+          predicates:
+            - Path=/wallets, /wallets/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-server:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true
