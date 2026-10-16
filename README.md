@@ -30,6 +30,7 @@ exige el enunciado; aquí solo se versionan la documentación y los artefactos d
 
 ## Documentación
 
+- **[Historias de usuario](docs/historias-de-usuario.md)** — cada funcionalidad del sistema (Partes I, II y III) descrita como historia de usuario con criterios de aceptación y endpoints.
 - **[Diagramas draw.io](docs/diagrams/README.md)** — guía de apertura e índice de los diagramas.
 - **[Colección Postman](postman/)** — incluye cada caso de éxito y de error de las reglas de negocio.
 
