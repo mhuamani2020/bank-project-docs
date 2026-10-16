@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mxfile host="app.diagrams.net" modified="2026-10-15T00:00:00.000Z" agent="opencode" version="24.0.0" type="device">
   <diagram id="arch-design-01" name="Diseño de la Solución">
-    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="826" math="0" shadow="0">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1760" pageHeight="1000" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -166,6 +166,84 @@
         </mxCell>
         <mxCell id="note-res" value="Resiliencia (Resilience4j): @CircuitBreaker + @TimeLimiter sobre WebClient (CustomerClientAdapter, CreditClientAdapter)&lt;br/&gt;minimumNumberOfCalls=5 | slidingWindowSize=10 | waitDurationInOpenState=10s | timeout=2s&lt;br/&gt;Fallback → ServiceUnavailableException → HTTP 503 | Actuator: /actuator/circuitbreakers, /actuator/health" style="text;html=1;align=left;verticalAlign=top;fillColor=#FFF2CC;strokeColor=#D6B656;rounded=1;spacing=6;fontSize=11;" parent="1" vertex="1">
           <mxGeometry x="40" y="450" width="440" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="partiii-title" value="Parte III - Nuevas funcionalidades" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="1180" y="10" width="540" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="svc-auth" value="auth-service&lt;br/&gt;Spring Boot / WebFlux&lt;br/&gt;:8084" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="1180" y="70" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="db-auth" value="MongoDB&lt;br/&gt;:27017&lt;br/&gt;auth_db" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#D5E8D4;strokeColor=#82B366;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="1450" y="60" width="160" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="svc-yanki" value="yanki-service&lt;br/&gt;Spring Boot / WebFlux&lt;br/&gt;:8085" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="1180" y="210" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="db-yanki" value="MongoDB&lt;br/&gt;:27017&lt;br/&gt;yanki_db" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#D5E8D4;strokeColor=#82B366;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="1450" y="200" width="160" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="redis" value="Redis&lt;br/&gt;:6379&lt;br/&gt;caché de datos maestros" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#F8CECC;strokeColor=#B85450;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="1180" y="350" width="180" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="kafka" value="Kafka (message broker)&lt;br/&gt;:9092&lt;br/&gt;arquitectura orientada a eventos" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="1440" y="350" width="230" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="note-iii" value="Parte III:&lt;br/&gt;- Seguridad JWT: auth-service firma el token (HS256, claim roles); el api-gateway lo propaga y cada servicio lo valida como OAuth2 Resource Server.&lt;br/&gt;- Redis: caché de datos maestros (catálogo de clientes) en customer-service (cache-aside).&lt;br/&gt;- Kafka: eventos de movimientos + canal asíncrono Yanki ↔ bank-account-service (SIN REST).&lt;br/&gt;- Programación reactiva obligatoria en las nuevas funcionalidades (RxJava 3 + Spring WebFlux)." style="text;html=1;align=left;verticalAlign=top;fillColor=#FFF2CC;strokeColor=#D6B656;rounded=1;spacing=6;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="1180" y="480" width="490" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="e20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;dashed=1;exitX=1;exitY=0.25;entryX=0;entryY=0.5;" parent="1" source="gateway" target="svc-auth" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e20-label" value="/auth/** (JWT)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="e20" vertex="1" connectable="0">
+          <mxGeometry x="-0.2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;dashed=1;exitX=1;exitY=0.75;entryX=0;entryY=0.5;" parent="1" source="gateway" target="svc-yanki" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e21-label" value="/wallets/**" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="e21" vertex="1" connectable="0">
+          <mxGeometry x="-0.2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="svc-auth" target="db-auth" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="svc-yanki" target="db-yanki" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="svc-customer" target="redis" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e24-label" value="cache-aside" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="e24" vertex="1" connectable="0">
+          <mxGeometry x="-0.2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.25;" parent="1" source="svc-yanki" target="kafka" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e25-label" value="wallet-operations / -results" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="e25" vertex="1" connectable="0">
+          <mxGeometry x="-0.2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;dashed=1;exitX=1;exitY=0.75;entryX=0;entryY=0.75;" parent="1" source="svc-account" target="kafka" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e26-label" value="bank-account-transactions / wallet-operation-results" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="e26" vertex="1" connectable="0">
+          <mxGeometry x="-0.2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;dashed=1;exitX=1;exitY=0.75;entryX=0;entryY=0.9;" parent="1" source="svc-credit" target="kafka" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e27-label" value="credit-movements" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="e27" vertex="1" connectable="0">
+          <mxGeometry x="-0.2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>

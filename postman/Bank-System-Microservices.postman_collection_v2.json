@@ -1,8 +1,12 @@
 {
   "info": {
-    "name": "Bank System - Complete Test Scenarios (Phase 1 & 2)",
-    "description": "Colección completa con todos los casos de éxito y de validación de reglas de negocio para customer-service, bank-account-service y credit-service.",
+    "name": "Bank System - Complete Test Scenarios (Partes I, II y III)",
+    "description": "Colección completa con los casos de éxito y de validación de reglas de negocio. Incluye autenticación JWT (Parte III): ejecutar primero '0. Auth Service' para obtener el token, que se propaga automáticamente (collection auth = Bearer {{token}}) en el resto de peticiones.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
   },
   "variable": [
     { "key": "customer_url", "value": "http://localhost:8081", "type": "string" },
@@ -15,7 +19,14 @@
     { "key": "targetAccountId", "value": "acc-savings-02", "type": "string" },
     { "key": "creditCardId", "value": "cred-card-01", "type": "string" },
     { "key": "personalCreditId", "value": "cred-pers-01", "type": "string" },
-    { "key": "transactionId", "value": "tx-001", "type": "string" }
+    { "key": "transactionId", "value": "tx-001", "type": "string" },
+    { "key": "auth_url", "value": "http://localhost:8084", "type": "string" },
+    { "key": "wallet_url", "value": "http://localhost:8085", "type": "string" },
+    { "key": "token", "value": "", "type": "string" },
+    { "key": "debitCardId", "value": "card-001", "type": "string" },
+    { "key": "walletId", "value": "wallet-001", "type": "string" },
+    { "key": "walletCellphone", "value": "999888777", "type": "string" },
+    { "key": "targetWalletCellphone", "value": "999111222", "type": "string" }
   ],
   "item": [
     {
@@ -520,6 +531,256 @@
             "method": "GET",
             "header": [],
             "url": { "raw": "{{credit_url}}/credits/cred-inexistente-999/available-balance", "host": ["{{credit_url}}"], "path": ["credits", "cred-inexistente-999", "available-balance"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "0. Auth Service",
+      "item": [
+        {
+          "name": "0.1 Login (Get JWT Token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Login OK y token guardado\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.collectionVariables.set(\"token\", json.accessToken);",
+                  "    pm.expect(json.accessToken).to.be.a(\"string\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "description": "Obtiene el JWT y lo guarda en la variable de colección {{token}}. Ejecutar ANTES que el resto de carpetas.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": { "raw": "{{auth_url}}/auth/login", "host": ["{{auth_url}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "0.2 Register User (Success)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"operador\",\n  \"password\": \"operador123\"\n}"
+            },
+            "url": { "raw": "{{auth_url}}/auth/register", "host": ["{{auth_url}}"], "path": ["auth", "register"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Debit Cards & Reports",
+      "item": [
+        {
+          "name": "6.1 Create Debit Card (Success)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountId\": \"{{savingsAccountId}}\",\n  \"status\": \"ACTIVE\"\n}"
+            },
+            "url": { "raw": "{{account_url}}/debit-cards", "host": ["{{account_url}}"], "path": ["debit-cards"] }
+          }
+        },
+        {
+          "name": "6.2 Create Debit Card for Inexistent Account (Error 400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountId\": \"acc-inexistente-999\",\n  \"status\": \"ACTIVE\"\n}"
+            },
+            "url": { "raw": "{{account_url}}/debit-cards", "host": ["{{account_url}}"], "path": ["debit-cards"] }
+          }
+        },
+        {
+          "name": "6.3 Get All Debit Cards",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{account_url}}/debit-cards", "host": ["{{account_url}}"], "path": ["debit-cards"] }
+          }
+        },
+        {
+          "name": "6.4 Get Debit Card By ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{account_url}}/debit-cards/{{debitCardId}}", "host": ["{{account_url}}"], "path": ["debit-cards", "{{debitCardId}}"] }
+          }
+        },
+        {
+          "name": "6.5 Get Debit Cards By Customer",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{account_url}}/debit-cards/customer/{{personalCustomerId}}", "host": ["{{account_url}}"], "path": ["debit-cards", "customer", "{{personalCustomerId}}"] }
+          }
+        },
+        {
+          "name": "6.6 Pay with Debit Card (Success)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "description": "Debita la cuenta principal asociada a la tarjeta de débito.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 100.0,\n  \"description\": \"Compra en comercio\"\n}"
+            },
+            "url": { "raw": "{{account_url}}/debit-cards/{{debitCardId}}/payments", "host": ["{{account_url}}"], "path": ["debit-cards", "{{debitCardId}}", "payments"] }
+          }
+        },
+        {
+          "name": "6.7 Get Debit Card Movements",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{account_url}}/debit-cards/{{debitCardId}}/movements", "host": ["{{account_url}}"], "path": ["debit-cards", "{{debitCardId}}", "movements"] }
+          }
+        },
+        {
+          "name": "6.8 Report: Account Products Summary (by date range)",
+          "request": {
+            "method": "GET",
+            "description": "Reporte general por producto en un intervalo de fechas (Parte II).",
+            "url": { "raw": "{{account_url}}/reports/bank-accounts/products-summary?from=2026-01-01&to=2026-12-31", "host": ["{{account_url}}"], "path": ["reports", "bank-accounts", "products-summary"], "query": [{ "key": "from", "value": "2026-01-01" }, { "key": "to", "value": "2026-12-31" }] }
+          }
+        },
+        {
+          "name": "6.9 Report: Debit Card Last Movements",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{account_url}}/reports/debit-card/{{debitCardId}}/last-movements", "host": ["{{account_url}}"], "path": ["reports", "debit-card", "{{debitCardId}}", "last-movements"] }
+          }
+        },
+        {
+          "name": "6.10 Report: Credit Products Summary (by date range)",
+          "request": {
+            "method": "GET",
+            "description": "Reporte general de productos de crédito en un intervalo de fechas (Parte II).",
+            "url": { "raw": "{{credit_url}}/reports/credits/products-summary?from=2026-01-01&to=2026-12-31", "host": ["{{credit_url}}"], "path": ["reports", "credits", "products-summary"], "query": [{ "key": "from", "value": "2026-01-01" }, { "key": "to", "value": "2026-12-31" }] }
+          }
+        },
+        {
+          "name": "6.11 Report: Credit Card Last Movements",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{credit_url}}/reports/credit-card/{{creditCardId}}/last-movements", "host": ["{{credit_url}}"], "path": ["reports", "credit-card", "{{creditCardId}}", "last-movements"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Yanki Wallet (Kafka)",
+      "item": [
+        {
+          "name": "7.1 Register Wallet (Success - no bank customer required)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentNumber\": \"70123456\",\n  \"cellphone\": \"{{walletCellphone}}\",\n  \"imei\": \"IMEI-123456789\",\n  \"email\": \"yanki.user@mail.com\"\n}"
+            },
+            "url": { "raw": "{{wallet_url}}/wallets", "host": ["{{wallet_url}}"], "path": ["wallets"] }
+          }
+        },
+        {
+          "name": "7.2 Register Wallet with Duplicate Cellphone (Error 400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentNumber\": \"79999999\",\n  \"cellphone\": \"{{walletCellphone}}\",\n  \"imei\": \"IMEI-000000000\",\n  \"email\": \"otro@mail.com\"\n}"
+            },
+            "url": { "raw": "{{wallet_url}}/wallets", "host": ["{{wallet_url}}"], "path": ["wallets"] }
+          }
+        },
+        {
+          "name": "7.3 Get All Wallets",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{wallet_url}}/wallets", "host": ["{{wallet_url}}"], "path": ["wallets"] }
+          }
+        },
+        {
+          "name": "7.4 Get Wallet By ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{wallet_url}}/wallets/{{walletId}}", "host": ["{{wallet_url}}"], "path": ["wallets", "{{walletId}}"] }
+          }
+        },
+        {
+          "name": "7.5 Get Wallet By Cellphone",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{wallet_url}}/wallets/by-cellphone/{{walletCellphone}}", "host": ["{{wallet_url}}"], "path": ["wallets", "by-cellphone", "{{walletCellphone}}"] }
+          }
+        },
+        {
+          "name": "7.6 Associate Debit Card to Wallet",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "description": "Asocia una tarjeta de débito del banco; habilita carga/retiro contra la cuenta principal.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"debitCardId\": \"{{debitCardId}}\"\n}"
+            },
+            "url": { "raw": "{{wallet_url}}/wallets/{{walletId}}/debit-card", "host": ["{{wallet_url}}"], "path": ["wallets", "{{walletId}}", "debit-card"] }
+          }
+        },
+        {
+          "name": "7.7 Send Payment to Another Wallet (by cellphone)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "description": "Envía saldo a otro monedero usando solo su número de celular.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"targetCellphone\": \"{{targetWalletCellphone}}\",\n  \"amount\": 25.0\n}"
+            },
+            "url": { "raw": "{{wallet_url}}/wallets/{{walletId}}/payments", "host": ["{{wallet_url}}"], "path": ["wallets", "{{walletId}}", "payments"] }
+          }
+        },
+        {
+          "name": "7.8 Top-Up: Load Balance from Debit Card (Async 202)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "description": "Publica el comando en Kafka (wallet-operations); el saldo se actualiza al recibir el resultado (wallet-operation-results).",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 100.0\n}"
+            },
+            "url": { "raw": "{{wallet_url}}/wallets/{{walletId}}/top-up", "host": ["{{wallet_url}}"], "path": ["wallets", "{{walletId}}", "top-up"] }
+          }
+        },
+        {
+          "name": "7.9 Withdraw: Credit Balance to Debit Card (Async 202)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "description": "Publica el comando en Kafka; el banco abona la cuenta y Yanki debita el monedero al recibir el resultado.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 50.0\n}"
+            },
+            "url": { "raw": "{{wallet_url}}/wallets/{{walletId}}/withdraw", "host": ["{{wallet_url}}"], "path": ["wallets", "{{walletId}}", "withdraw"] }
           }
         }
       ]

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-10-16T00:00:00.000Z" agent="opencode" version="24.0.0" type="device">
+  <diagram id="seq-security-09" name="Secuencia - Seguridad JWT">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Diagrama de Secuencia - Seguridad con JWT (Parte III)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=18;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="250" y="0" width="700" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="l-cliente" value="Cliente&lt;br/&gt;(HTTP / REST)" style="shape=umlLifeline;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#FFE6CC;strokeColor=#D79B00;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="40" y="40" width="130" height="760" as="geometry" />
+        </mxCell>
+        <mxCell id="l-gateway" value="api-gateway&lt;br/&gt;:8089" style="shape=umlLifeline;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="270" y="40" width="130" height="760" as="geometry" />
+        </mxCell>
+        <mxCell id="l-auth" value="auth-service&lt;br/&gt;:8084" style="shape=umlLifeline;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#D5E8D4;strokeColor=#82B366;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="500" y="40" width="130" height="760" as="geometry" />
+        </mxCell>
+        <mxCell id="l-mongo" value="MongoDB&lt;br/&gt;auth_db" style="shape=umlLifeline;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#F5F5F5;strokeColor=#666666;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="730" y="40" width="130" height="760" as="geometry" />
+        </mxCell>
+        <mxCell id="l-svc" value="bank-account-service&lt;br/&gt;:8082 (Resource Server)" style="shape=umlLifeline;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="960" y="40" width="150" height="760" as="geometry" />
+        </mxCell>
+        <mxCell id="a1" value="1. POST /auth/login {username, password}" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;verticalAlign=bottom;exitX=0.5;exitY=0.12;entryX=0.5;entryY=0.12;" parent="1" source="l-cliente" target="l-gateway" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a2" value="2. Enruta /auth/** (endpoint público)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;verticalAlign=bottom;exitX=0.5;exitY=0.20;entryX=0.5;entryY=0.20;" parent="1" source="l-gateway" target="l-auth" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a3" value="3. Busca el usuario (UserRepository)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;verticalAlign=bottom;exitX=0.5;exitY=0.28;entryX=0.5;entryY=0.28;" parent="1" source="l-auth" target="l-mongo" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a4" value="4. Usuario + hash de contraseña + roles" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;dashed=1;verticalAlign=bottom;exitX=0.5;exitY=0.36;entryX=0.5;entryY=0.36;" parent="1" source="l-mongo" target="l-auth" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a5" value="5. Valida credenciales y firma el JWT (HS256, claim roles, iss=bank-system, exp=3600s)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;verticalAlign=bottom;exitX=0.5;exitY=0.44;entryX=0.5;entryY=0.44;" parent="1" source="l-auth" target="l-svc" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a6" value="6. 200 OK { accessToken, tokenType=Bearer, expiresIn }" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;dashed=1;verticalAlign=bottom;exitX=0.5;exitY=0.52;entryX=0.5;entryY=0.52;" parent="1" source="l-auth" target="l-cliente" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a7" value="7. GET /bank-accounts/**  Authorization: Bearer &lt;JWT&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;verticalAlign=bottom;exitX=0.5;exitY=0.60;entryX=0.5;entryY=0.60;" parent="1" source="l-cliente" target="l-gateway" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a8" value="8. El Gateway NO valida; PROPAGA la cabecera Authorization" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;verticalAlign=bottom;exitX=0.5;exitY=0.68;entryX=0.5;entryY=0.68;" parent="1" source="l-gateway" target="l-svc" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a9" value="9. Valida firma y vigencia (OAuth2 Resource Server, app.jwt.secret compartido) y resuelve roles → ROLE_*" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;verticalAlign=bottom;exitX=0.5;exitY=0.76;entryX=0.5;entryY=0.76;" parent="1" source="l-svc" target="l-auth" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a10" value="10. 200 OK (datos) | 401 sin token o inválido | 403 sin permisos" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;dashed=1;verticalAlign=bottom;exitX=0.5;exitY=0.86;entryX=0.5;entryY=0.86;" parent="1" source="l-svc" target="l-cliente" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="note1" value="Token relay (Partes I/II + III):&lt;br/&gt;Cuando bank-account-service o credit-service llaman por REST a customer-service/credit-service,&lt;br/&gt;propagan el JWT entrante en el WebClient saliente (Authorization).&lt;br/&gt;Usuario por defecto creado por bank-config-repo: admin / admin123 (rol ADMIN)." style="text;html=1;align=left;verticalAlign=top;fillColor=#FFF2CC;strokeColor=#D6B656;rounded=1;spacing=6;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="40" y="690" width="900" height="100" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
