@@ -188,7 +188,20 @@
                 "register"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -226,7 +239,10 @@
                 "type": "text/javascript",
                 "exec": [
                   "var json = pm.response.json();",
-                  "pm.collectionVariables.set(\"personalCustomerId\", json.id);"
+                  "pm.collectionVariables.set(\"personalCustomerId\", json.id);",
+                  "pm.test(\"Status code es 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
                 ]
               }
             }
@@ -263,7 +279,10 @@
                 "type": "text/javascript",
                 "exec": [
                   "var json = pm.response.json();",
-                  "pm.collectionVariables.set(\"businessCustomerId\", json.id);"
+                  "pm.collectionVariables.set(\"businessCustomerId\", json.id);",
+                  "pm.test(\"Status code es 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
                 ]
               }
             }
@@ -300,7 +319,10 @@
                 "type": "text/javascript",
                 "exec": [
                   "var json = pm.response.json();",
-                  "pm.collectionVariables.set(\"personalVipCustomerId\", json.id);"
+                  "pm.collectionVariables.set(\"personalVipCustomerId\", json.id);",
+                  "pm.test(\"Status code es 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
                 ]
               }
             }
@@ -319,7 +341,20 @@
                 "customers"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "1.5 Get Customer By ID (Success)",
@@ -335,7 +370,20 @@
                 "{{personalCustomerId}}"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "1.6 Get Customer By ID (Error 404 - Not Found)",
@@ -351,7 +399,20 @@
                 "inexistente-999"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -389,7 +450,10 @@
                 "type": "text/javascript",
                 "exec": [
                   "var json = pm.response.json();",
-                  "pm.collectionVariables.set(\"personalCreditId\", json.id);"
+                  "pm.collectionVariables.set(\"personalCreditId\", json.id);",
+                  "pm.test(\"Status code es 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
                 ]
               }
             }
@@ -418,7 +482,20 @@
                 "credits"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "2.3 Create Business Credit by Personal (Error 400 - Forbidden)",
@@ -443,7 +520,20 @@
                 "credits"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "2.4 Create Business Credit (Success 1)",
@@ -468,7 +558,20 @@
                 "credits"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "2.5 Create Multiple Business Credit (Success 2)",
@@ -493,7 +596,20 @@
                 "credits"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "2.6 Create Personal Credit by Business (Error 400 - Forbidden)",
@@ -518,7 +634,20 @@
                 "credits"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "2.7 Create Credit Card for VIP Customer (Success)",
@@ -551,7 +680,10 @@
                 "type": "text/javascript",
                 "exec": [
                   "var json = pm.response.json();",
-                  "pm.collectionVariables.set(\"creditCardId\", json.id);"
+                  "pm.collectionVariables.set(\"creditCardId\", json.id);",
+                  "pm.test(\"Status code es 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
                 ]
               }
             }
@@ -573,7 +705,20 @@
                 "has-credit-card"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "2.9 Get All Credits (FindAll)",
@@ -702,7 +847,10 @@
                 "type": "text/javascript",
                 "exec": [
                   "var json = pm.response.json();",
-                  "pm.collectionVariables.set(\"savingsAccountId\", json.id);"
+                  "pm.collectionVariables.set(\"savingsAccountId\", json.id);",
+                  "pm.test(\"Status code es 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
                 ]
               }
             }
@@ -731,7 +879,20 @@
                 "bank-accounts"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "3.3 Create Savings Account for Business (Error 400 - Forbidden)",
@@ -756,7 +917,20 @@
                 "bank-accounts"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "3.4 Create Fixed Term for Business (Error 400 - Forbidden)",
@@ -781,7 +955,20 @@
                 "bank-accounts"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "3.5 Create Multiple Current Accounts for Business (Success 1)",
@@ -806,7 +993,20 @@
                 "bank-accounts"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "3.6 Create Multiple Current Accounts for Business (Success 2)",
@@ -839,7 +1039,10 @@
                 "type": "text/javascript",
                 "exec": [
                   "var json = pm.response.json();",
-                  "pm.collectionVariables.set(\"targetAccountId\", json.id);"
+                  "pm.collectionVariables.set(\"targetAccountId\", json.id);",
+                  "pm.test(\"Status code es 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
                 ]
               }
             }
@@ -868,7 +1071,20 @@
                 "bank-accounts"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "3.8 Create VIP Account WITH Credit Card (Success)",
@@ -893,7 +1109,20 @@
                 "bank-accounts"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "3.9 Create Account with Inexistent Customer (Error 400 - Not Found)",
@@ -918,7 +1147,20 @@
                 "bank-accounts"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "3.10 Create Fixed Term Account for Personal (Success)",
@@ -944,7 +1186,20 @@
                 "bank-accounts"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "3.11 Get Account Available Balance (Success)",
@@ -963,7 +1218,20 @@
                 "balance"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "3.12 Get Account Available Balance (Error 404 - Not Found)",
@@ -981,7 +1249,20 @@
                 "balance"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "3.13 Get All Bank Accounts (FindAll)",
@@ -1080,7 +1361,10 @@
                 "type": "text/javascript",
                 "exec": [
                   "var json = pm.response.json();",
-                  "pm.collectionVariables.set(\"transactionId\", json.id);"
+                  "pm.collectionVariables.set(\"transactionId\", json.id);",
+                  "pm.test(\"Status code es 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
                 ]
               }
             }
@@ -1111,7 +1395,20 @@
                 "transactions"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "4.3 Withdrawal Exceeding Balance (Error 400 - Insufficient Balance)",
@@ -1138,7 +1435,20 @@
                 "transactions"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "4.4 Transfer Between Accounts (Success)",
@@ -1164,7 +1474,20 @@
                 "transfers"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "4.5 Get All Account Transactions",
@@ -1181,7 +1504,20 @@
                 "transactions"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "4.6 Get All Transactions (FindAll global)",
@@ -1198,7 +1534,20 @@
                 "transactions"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "4.7 Get Transaction By ID (FindById)",
@@ -1217,7 +1566,20 @@
                 "{{transactionId}}"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "4.8 Update Transaction (FindAndModify)",
@@ -1245,7 +1607,20 @@
                 "{{transactionId}}"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "4.9 Delete Transaction",
@@ -1264,7 +1639,20 @@
                 "{{transactionId}}"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -1297,7 +1685,20 @@
                 "payments"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "5.2 Payment with Amount 0 (Error 400 - Invalid Amount)",
@@ -1324,7 +1725,20 @@
                 "payments"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "5.3 Payment on Personal Credit (Success)",
@@ -1351,7 +1765,20 @@
                 "payments"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "5.4 Consumption on Credit Card (Success)",
@@ -1379,7 +1806,20 @@
                 "consumptions"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "5.5 Consumption Exceeding Credit Limit (Error 400)",
@@ -1407,7 +1847,20 @@
                 "consumptions"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "5.6 Consumption on Personal Credit (Error 400 - Not a Card)",
@@ -1435,7 +1888,20 @@
                 "consumptions"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "5.7 Get Available Balance of Credit Card",
@@ -1453,7 +1919,20 @@
                 "available-balance"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "5.8 Get Movements of Credit Card",
@@ -1472,7 +1951,20 @@
                 "movements"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "5.9 Get Available Balance (Error 404 - Not Found)",
@@ -1490,7 +1982,20 @@
                 "available-balance"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "5.10 Get All Credit Movements (FindAll)",
@@ -1699,7 +2204,10 @@
                 "type": "text/javascript",
                 "exec": [
                   "var json = pm.response.json();",
-                  "pm.collectionVariables.set(\"debitCardId\", json.id);"
+                  "pm.collectionVariables.set(\"debitCardId\", json.id);",
+                  "pm.test(\"Status code es 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
                 ]
               }
             }
@@ -1728,7 +2236,20 @@
                 "debit-cards"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "6.3 Get All Debit Cards",
@@ -1743,7 +2264,20 @@
                 "debit-cards"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "6.4 Get Debit Card By ID",
@@ -1759,7 +2293,20 @@
                 "{{debitCardId}}"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "6.5 Get Debit Cards By Customer",
@@ -1776,7 +2323,20 @@
                 "{{personalCustomerId}}"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "6.6 Pay with Debit Card (Success)",
@@ -1804,7 +2364,20 @@
                 "payments"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "6.7 Get Debit Card Movements",
@@ -1821,7 +2394,20 @@
                 "movements"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "6.8 Report: Account Products Summary (by date range)",
@@ -1849,7 +2435,20 @@
                 }
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "6.9 Report: Debit Card Last Movements",
@@ -1867,7 +2466,20 @@
                 "last-movements"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "6.10 Report: Credit Products Summary (by date range)",
@@ -1895,7 +2507,20 @@
                 }
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "6.11 Report: Credit Card Last Movements",
@@ -1913,7 +2538,20 @@
                 "last-movements"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -1951,7 +2589,10 @@
                 "type": "text/javascript",
                 "exec": [
                   "var json = pm.response.json();",
-                  "pm.collectionVariables.set(\"walletId\", json.id);"
+                  "pm.collectionVariables.set(\"walletId\", json.id);",
+                  "pm.test(\"Status code es 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
                 ]
               }
             }
@@ -1980,7 +2621,20 @@
                 "wallets"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "7.3 Get All Wallets",
@@ -1995,7 +2649,20 @@
                 "wallets"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "7.4 Get Wallet By ID",
@@ -2011,7 +2678,20 @@
                 "{{walletId}}"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "7.5 Get Wallet By Cellphone",
@@ -2028,7 +2708,20 @@
                 "{{walletCellphone}}"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "7.6 Associate Debit Card to Wallet",
@@ -2056,7 +2749,20 @@
                 "debit-card"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "7.7 Send Payment to Another Wallet (by cellphone)",
@@ -2084,7 +2790,20 @@
                 "payments"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "7.8 Top-Up: Load Balance from Debit Card (Async 202)",
@@ -2112,7 +2831,20 @@
                 "top-up"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 202\", function () {",
+                  "    pm.response.to.have.status(202);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "7.9 Withdraw: Credit Balance to Debit Card (Async 202)",
@@ -2140,7 +2872,20 @@
                 "withdraw"
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code es 202\", function () {",
+                  "    pm.response.to.have.status(202);",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
