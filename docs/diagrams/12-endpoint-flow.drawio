@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-10-16T00:00:00.000Z" agent="opencode" version="24.0.0" type="device">
+  <diagram id="flow-endpoints-12" name="Flujo de endpoints - cadena E2E">
+    <mxGraphModel dx="1200" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1040" pageHeight="1210" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Flujo de los endpoints — cadena end-to-end entre microservicios" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=17;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="120" y="10" width="800" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="f0" value="&lt;b&gt;FASE 0 · AUTH&lt;/b&gt; — auth-service :8084 (auth_db)&lt;br&gt;&lt;b&gt;POST /auth/login&lt;/b&gt; → JWT &lt;b&gt;{{token}}&lt;/b&gt; (prerequisito de TODAS las llamadas)&lt;br&gt;POST /auth/register" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacing=8;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="60" y="55" width="900" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="f1" value="&lt;b&gt;FASE 1 · CLIENTES&lt;/b&gt; — customer-service :8081 (customer_db) · caché Redis&lt;br&gt;&lt;b&gt;POST /customers&lt;/b&gt; → crea cliente (PERSONAL / BUSINESS / VIP) → &lt;b&gt;customerId&lt;/b&gt;&lt;br&gt;GET /customers · GET /customers/{id} · PUT /customers/{id} · DELETE /customers/{id}" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacing=8;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="60" y="145" width="900" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="f2" value="&lt;b&gt;FASE 2 · CRÉDITOS&lt;/b&gt; — credit-service :8083 (credit_db)&lt;br&gt;&lt;b&gt;POST /credits&lt;/b&gt; → PERSONAL_CREDIT / BUSINESS_CREDIT / CREDIT_CARD → &lt;b&gt;creditId&lt;/b&gt;&lt;br&gt;GET /credits · GET /credits/{id} · PUT · DELETE&lt;br&gt;POST /credits/{id}/payments · POST /credits/{id}/consumptions&lt;br&gt;GET /credits/{id}/available-balance · GET /credits/{id}/movements&lt;br&gt;GET /credits/customer/{id}/has-credit-card · GET /credits/customer/{id}/has-overdue-debt&lt;br&gt;GET /reports/credits/products-summary · GET /reports/credit-card/{id}/last-movements" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacing=8;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="60" y="245" width="900" height="150" as="geometry" />
+        </mxCell>
+
+        <mxCell id="f3" value="&lt;b&gt;FASE 3 · CUENTAS BANCARIAS&lt;/b&gt; — bank-account-service :8082 (bankaccount_db)&lt;br&gt;&lt;b&gt;POST /bank-accounts&lt;/b&gt; → crea cuenta (AHORRO / CORRIENTE / PLAZO FIJO; perfiles VIP / PYME) → &lt;b&gt;accountId&lt;/b&gt;&lt;br&gt;GET /bank-accounts · GET /bank-accounts/{id} · PUT · DELETE · GET /bank-accounts/{id}/balance&lt;br&gt;&lt;i&gt;Depende de:&lt;/i&gt; customer-service (cliente existe) y credit-service (has-credit-card / has-overdue-debt) — REST + circuit breaker 2 s" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacing=8;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="60" y="415" width="900" height="110" as="geometry" />
+        </mxCell>
+
+        <mxCell id="f4" value="&lt;b&gt;FASE 4 · MOVIMIENTOS Y TRANSFERENCIAS&lt;/b&gt; — bank-account-service :8082&lt;br&gt;&lt;b&gt;POST /bank-accounts/{accountId}/transactions&lt;/b&gt; → depósito / retiro&lt;br&gt;&lt;b&gt;POST /bank-accounts/transfers&lt;/b&gt; → entre cuentas del mismo cliente y a terceros del mismo banco&lt;br&gt;GET /bank-accounts/{accountId}/transactions · GET /bank-accounts/transactions · GET /bank-accounts/transactions/{transactionId} · PUT · DELETE&lt;br&gt;→ publica evento Kafka &lt;code&gt;bank-account-transactions&lt;/code&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacing=8;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="60" y="545" width="900" height="130" as="geometry" />
+        </mxCell>
+
+        <mxCell id="f5" value="&lt;b&gt;FASE 5 · TARJETAS DE DÉBITO Y REPORTES&lt;/b&gt; — bank-account-service :8082&lt;br&gt;&lt;b&gt;POST /debit-cards&lt;/b&gt; → crea tarjeta de débito (requiere una cuenta) → &lt;b&gt;cardId&lt;/b&gt;&lt;br&gt;GET /debit-cards · GET /debit-cards/{id} · GET /debit-cards/customer/{customerId} · PUT · DELETE&lt;br&gt;&lt;b&gt;POST /debit-cards/{id}/payments&lt;/b&gt; → pago (movimiento DEBIT_CARD_PAYMENT) · GET /debit-cards/{id}/movements&lt;br&gt;GET /reports/bank-accounts/products-summary · GET /reports/debit-card/{cardId}/last-movements" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacing=8;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="60" y="695" width="900" height="150" as="geometry" />
+        </mxCell>
+
+        <mxCell id="f6" value="&lt;b&gt;FASE 6 · MONEDERO YANKI&lt;/b&gt; — yanki-service :8085 (yanki_db)&lt;br&gt;&lt;b&gt;POST /wallets&lt;/b&gt; → crea monedero (NO requiere ser cliente) → &lt;b&gt;walletId&lt;/b&gt;&lt;br&gt;GET /wallets · GET /wallets/{id} · GET /wallets/by-cellphone/{cellphone}&lt;br&gt;&lt;b&gt;POST /wallets/{id}/debit-card&lt;/b&gt; → asocia la tarjeta de débito del banco (cuenta principal)" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacing=8;fillColor=#E1D5E7;strokeColor=#9673A6;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="60" y="865" width="900" height="95" as="geometry" />
+        </mxCell>
+
+        <mxCell id="f7" value="&lt;b&gt;FASE 7 · OPERACIONES YANKI (ASÍNCRONO)&lt;/b&gt; — yanki-service :8085&lt;br&gt;&lt;b&gt;POST /wallets/{id}/payments&lt;/b&gt; → pago a otro monedero por celular&lt;br&gt;&lt;b&gt;POST /wallets/{id}/top-up&lt;/b&gt; · &lt;b&gt;/withdraw&lt;/b&gt; → &lt;b&gt;202 Accepted&lt;/b&gt;&lt;br&gt;Kafka: &lt;code&gt;wallet-operations&lt;/code&gt; → bank-account-service debita/abona la cuenta → &lt;code&gt;wallet-operation-results&lt;/code&gt; → yanki ajusta el saldo (SIN REST entre servicios nuevos)" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacing=8;fillColor=#E1D5E7;strokeColor=#9673A6;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="60" y="980" width="900" height="110" as="geometry" />
+        </mxCell>
+
+        <mxCell id="notes" value="&lt;b&gt;Todas las peticiones&lt;/b&gt; (excepto el login) llevan &lt;code&gt;Authorization: Bearer {{token}}&lt;/code&gt;. &lt;b&gt;Línea punteada&lt;/b&gt; = dependencia entre microservicios (lectura/evento). Las rutas se consumen por el api-gateway :8089 o directo al servicio." style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacing=8;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="60" y="1110" width="900" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#666666;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="f0" target="f1" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="s2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#666666;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="f1" target="f2" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="s3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#666666;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="f2" target="f3" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="s4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#666666;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="f3" target="f4" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="s5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#666666;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="f4" target="f5" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="s6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#666666;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="f5" target="f6" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="s7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#666666;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="f6" target="f7" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <mxCell id="d1" value="valida cliente (REST)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;dashed=1;strokeColor=#B85450;fontSize=10;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" parent="1" source="f1" target="f3" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="d2" value="valida tarjeta / deuda (REST)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;dashed=1;strokeColor=#B85450;fontSize=10;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" parent="1" source="f2" target="f3" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="d3" value="Kafka (sin REST)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;dashed=1;strokeColor=#9673A6;fontSize=10;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" parent="1" source="f5" target="f7" edge="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
