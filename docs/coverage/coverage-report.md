@@ -5,7 +5,7 @@
 > informe agrega los reportes individuales que genera el plugin `jacoco-maven-plugin`
 > en cada módulo durante la fase `test`.
 
-**Generado:** 2026-10-19 15:08 UTC  
+**Generado:** 2026-10-19 15:24 UTC  
 **Plugin:** `jacoco-maven-plugin` 0.8.11  
 **Comando por módulo:** `mvnw clean verify` (commons: `mvnw clean install`)  
 **Reporte HTML individual:** `<modulo>/target/site/jacoco/index.html`
@@ -16,11 +16,11 @@
 
 | Métrica | Cubierto | No cubierto | Total | Cobertura |
 |---|---:|---:|---:|---:|
-| **Líneas** | 1,291 | 161 | 1,452 | **88.9%** |
+| **Líneas** | 1,289 | 157 | 1,446 | **89.1%** |
 | **Ramas** | 255 | 105 | 360 | **70.8%** |
-| Instrucciones | 6,064 | 751 | 6,815 | 89.0% |
-| Métodos | 407 | 58 | 465 | 87.5% |
-| Complejidad ciclomática | 490 | 155 | 645 | 76.0% |
+| Instrucciones | 6,058 | 741 | 6,799 | 89.1% |
+| Métodos | 405 | 56 | 461 | 87.9% |
+| Complejidad ciclomática | 488 | 153 | 641 | 76.1% |
 
 **Pruebas ejecutadas:** 269 · **fallos:** 0 · **errores:** 0
 
@@ -29,18 +29,23 @@
 | Módulo | Tipo | Tests | Clases | Líneas | Ramas | Métodos | Instrucciones |
 |---|---|---:|---:|---:|---:|---:|---:|
 | `bank-resilience-commons` | Librería compartida | 5 | 5 | 88.6% | — | 75.0% | 87.1% |
-| `discovery-server` | Infraestructura | 1 | 1 | 33.3% | — | 50.0% | 37.5% |
+| `discovery-server` | Infraestructura | 1 | — | n/a | n/a | n/a | n/a |
 | `config-server` | Infraestructura | — | — | sin pruebas | sin pruebas | sin pruebas | sin pruebas |
 | `auth-service` | Microservicio | 12 | 8 | 42.1% | 69.2% | 50.0% | 45.6% |
 | `customer-service` | Microservicio | 27 | 8 | 93.8% | 50.0% | 93.2% | 93.9% |
 | `bank-account-service` | Microservicio | 119 | 24 | 95.2% | 73.1% | 94.4% | 94.6% |
 | `credit-service` | Microservicio | 67 | 15 | 94.3% | 66.2% | 92.9% | 93.2% |
 | `yanki-service` | Microservicio | 37 | 10 | 84.8% | 72.9% | 81.4% | 85.1% |
-| `api-gateway` | Infraestructura | 1 | 1 | 33.3% | — | 50.0% | 37.5% |
+| `api-gateway` | Infraestructura | 1 | — | n/a | n/a | n/a | n/a |
 
-> `config-server` **no tiene carpeta `src/test`**: es un módulo de infraestructura (solo
-> expone la configuración centralizada) y aporta **0 líneas instrumentables con pruebas**,
-> por eso aparece como *sin pruebas* en lugar de un porcentaje.
+> **`n/a` = el módulo tiene pruebas pero ninguna clase analizable.** Sus clases
+> quedan fuera por el criterio de exclusión unificado (la única es la principal
+> `*Application`, que es *plumbing* de Spring Boot sin lógica de negocio verificable):
+> `discovery-server` y `api-gateway` ejecutan 1 test cada uno (carga de contexto) que
+> sigue corriendo y validando, pero no aporta líneas instrumentables.
+>
+> **`sin pruebas` = `config-server`** no tiene carpeta `src/test`: es un módulo de
+> infraestructura que solo expone la configuración centralizada.
 
 ## 3. Detalle por módulo
 
@@ -58,15 +63,11 @@
 
 ### `discovery-server`
 
-**Total:** 33.3% de líneas · — de ramas · 50.0% de métodos
-
-| Paquete | Clase | Líneas cub. / tot. | Líneas % | Ramas % | Métodos % |
-|---|---|---:|---:|---:|---:|
-| `com.nttdata.discovery_server` | `DiscoveryServerApplication` | 1 / 3 | 33.3% | — | 50.0% |
+_1 prueba(s) ejecutada(s), pero **ninguna clase analizable**: su única clase es la principal `*Application`, que queda fuera por el criterio unificado de exclusiones. El test sigue corriendo y validando (carga de contexto).
 
 ### `config-server`
 
-_Sin reporte de cobertura (módulo sin pruebas)._
+_Sin pruebas: el módulo no tiene carpeta `src/test`._
 
 ### `auth-service`
 
@@ -170,11 +171,7 @@ _Sin reporte de cobertura (módulo sin pruebas)._
 
 ### `api-gateway`
 
-**Total:** 33.3% de líneas · — de ramas · 50.0% de métodos
-
-| Paquete | Clase | Líneas cub. / tot. | Líneas % | Ramas % | Métodos % |
-|---|---|---:|---:|---:|---:|
-| `com.nttdata.api_gateway` | `ApiGatewayApplication` | 1 / 3 | 33.3% | — | 50.0% |
+_1 prueba(s) ejecutada(s), pero **ninguna clase analizable**: su única clase es la principal `*Application`, que queda fuera por el criterio unificado de exclusiones. El test sigue corriendo y validando (carga de contexto).
 
 ---
 
@@ -185,9 +182,14 @@ _Sin reporte de cobertura (módulo sin pruebas)._
   archivos `.exec` con la CLI de JaCoCo porque cada módulo declara **exclusiones
   propias** y el reporte fusionado incluiría clases que el build real excluye, dando
   porcentajes distintos a los verdaderos.
-- **Exclusiones aplicadas por módulo** (en sus respectivos `pom.xml`):
-  `com/sun/tools/**`, `**/dto/**`, `**/model/**`, `**/*Application*`.
-  `bank-account-service` y `credit-service` afinan además sus propias exclusiones.
+- **Exclusiones idénticas en los 9 módulos** (mismo bloque en todos sus `pom.xml`):
+  `com/sun/tools/**`, `**/dto/**`, `**/model/**` y `**/*Application*`.
+  Se **unificó el criterio**: `api-gateway`, `discovery-server`, `config-server` y
+  `bank-resilience-commons` no lo declaraban y `discovery-server`/`api-gateway`
+  medían su única clase, la principal `*Application`, que el resto de módulos excluye.
+  `bank-account-service` le faltaba `com/sun/tools/**`. Al unificar, `discovery-server`
+  y `api-gateway` pasan de 1 clase reportada a 0 **sin alterar ninguna métrica de
+  negocio** (esas clases no coincidían con los patrones añadidos en el resto de módulos).
 - **Database per service:** las clases `*Application`, DTOs y modelos se excluyen porque
   son *plumbing* de framework y mapeo, sin lógica de negocio verificable.
 - **Regenerar:** ejecutar `mvnw clean verify` en cada módulo (o

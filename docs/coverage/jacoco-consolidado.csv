@@ -4,7 +4,6 @@ bank-resilience-commons,bank-resilience-commons,com.nttdata.commons.resilience.c
 bank-resilience-commons,bank-resilience-commons,com.nttdata.commons.resilience.autoconfigure,ResilienceCommonsAutoConfiguration,7,0,0,0,2,0,2,0,2,0
 bank-resilience-commons,bank-resilience-commons,com.nttdata.commons.resilience.error,StandardApiExceptionHandler,4,71,0,0,0,16,1,8,1,8
 bank-resilience-commons,bank-resilience-commons,com.nttdata.commons.resilience.error,ApiError,6,27,0,0,2,10,2,4,2,4
-discovery-server,,com.nttdata.discovery_server,DiscoveryServerApplication,5,3,0,0,2,1,1,1,1,1
 auth-service,auth-service,com.nttdata.auth_service.api,ApiUtil,25,0,0,0,6,0,2,0,2,0
 auth-service,auth-service,com.nttdata.auth_service.mapper,AuthMapper,0,18,0,0,0,5,0,1,0,1
 auth-service,auth-service,com.nttdata.auth_service.security,JwtService,65,4,2,0,17,1,2,1,1,1
@@ -70,4 +69,3 @@ yanki-service,yanki-service,com.nttdata.yanki_service.config,SecurityConfig,91,0
 yanki-service,yanki-service,com.nttdata.yanki_service.messaging,WalletOperationResultConsumer,4,176,2,10,0,38,2,15,0,11
 yanki-service,yanki-service,com.nttdata.yanki_service.messaging,KafkaEventPublisher,9,46,1,1,2,13,1,5,0,5
 yanki-service,yanki-service,com.nttdata.yanki_service.mapper,WalletMapper,0,60,0,0,0,16,0,2,0,2
-api-gateway,api-gateway,com.nttdata.api_gateway,ApiGatewayApplication,5,3,0,0,2,1,1,1,1,1

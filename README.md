@@ -215,22 +215,28 @@ separado). Resumen:
 | Métrica | Resultado |
 |---|---|
 | **Pruebas ejecutadas** | **269** · 0 fallos · 0 errores |
-| **Líneas cubiertas** | **88.9%** (1.291 / 1.452) |
+| **Líneas cubiertas** | **89.1%** (1.289 / 1.446) |
 | **Ramas cubiertas** | **70.8%** (255 / 360) |
-| **Métodos cubiertos** | **87.5%** (407 / 465) |
-| Clases analizadas | 72 |
+| **Métodos cubiertos** | **87.9%** (405 / 461) |
+| Clases analizadas | 70 |
 
 | Módulo | Tests | Líneas |
 |---|---:|---:|
 | `bank-account-service` | 119 | 95.2% |
 | `credit-service` | 67 | 94.3% |
 | `customer-service` | 27 | 93.8% |
-| `yanki-service` | 37 | 84.8% |
 | `bank-resilience-commons` | 5 | 88.6% |
+| `yanki-service` | 37 | 84.8% |
 | `auth-service` | 12 | 42.1% |
-| `discovery-server` | 1 | 33.3% |
-| `api-gateway` | 1 | 33.3% |
+| `discovery-server` | 1 | n/a |
+| `api-gateway` | 1 | n/a |
 | `config-server` | — | sin pruebas |
+
+> Los **9 módulos declaran las mismas exclusiones** (`**/dto/**`, `**/model/**`,
+> `**/*Application*` y `com/sun/tools/**`), de modo que los porcentajes son comparables
+> entre sí. Por eso `discovery-server` y `api-gateway` figuran como **`n/a`**: sus tests
+> corren y validan, pero su única clase es la principal `*Application` (plumbing de Spring
+> Boot), excluida en todos los módulos; `config-server` no tiene carpeta `src/test`.
 
 > Los datos por clase están en [`docs/coverage/jacoco-consolidado.csv`](docs/coverage/jacoco-consolidado.csv),
 > y el informe metodológico (exclusiones, cómo regenerar) en
