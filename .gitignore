@@ -9,6 +9,5 @@
 !/.dockerignore
 !/README.md
 !/docs
-!/postman
 !/deploy
 !/docker-compose.yml

@@ -12,7 +12,7 @@ exige el enunciado; aquí solo se versionan la documentación y los artefactos d
 |---|---|
 | `docs/diagrams/` | Diagramas en formato **draw.io (XML)**: diseño de la solución, diagramas de secuencia por microservicio y diagramas UML (clases y casos de uso). |
 | `docs/historias-de-usuario.md` | Cada funcionalidad del sistema descrita como **historia de usuario** con sus criterios de aceptación. |
-| `postman/` | Colección de **Postman** con los escenarios de éxito y de validación de reglas de negocio de todos los servicios, incluido el login JWT. |
+| `bank-postman/` | Repositorio dedicado con la colección de **Postman**: escenarios de éxito y de validación de reglas de negocio de todos los servicios, incluido el login JWT. |
 | `docker-compose.yml` | Orquestación de **todos los contenedores**: infraestructura (MongoDB, Kafka, Redis), plataforma (discovery, config, gateway) y microservicios de negocio. |
 | `deploy/config-repo/` | Configuración externalizada **específica del entorno Docker** (hostnames de la red), servida por el `config-server` en modo `native`. |
 
@@ -33,12 +33,13 @@ exige el enunciado; aquí solo se versionan la documentación y los artefactos d
 | `yanki-service` | 8085 | **Monedero móvil Yanki** (Parte III): registro sin ser cliente, pagos entre monederos por celular y carga/retiro de saldo contra la tarjeta de débito. Se comunica por **Kafka** (nunca por REST). |
 | `bank-resilience-commons` | — | Librería compartida con el estándar de resiliencia (Resilience4j) y el manejo uniforme de errores. |
 | `bank-config-repo` | — | Configuración externalizada consumida por el Config Server. |
+| `bank-postman` | — | Repositorio dedicado con la **colección Postman** (requisito de la Parte III: “mantener un repositorio Postman”). |
 
 ## Documentación
 
 - **[Historias de usuario](docs/historias-de-usuario.md)** — cada funcionalidad del sistema (Partes I, II y III) descrita como historia de usuario con criterios de aceptación y endpoints.
 - **[Diagramas draw.io](docs/diagrams/README.md)** — guía de apertura e índice de los diagramas.
-- **[Colección Postman](postman/)** — incluye cada caso de éxito y de error de las reglas de negocio.
+- **[Colección Postman](bank-postman/)** — incluye cada caso de éxito y de error de las reglas de negocio.
 
 ## Orden de arranque de la solución
 
@@ -192,7 +193,7 @@ docker compose down
 
 ## Pruebas manuales con Postman
 
-1. Importar `postman/Bank-System-Microservices.postman_collection_v2.json`.
+1. Importar `bank-postman/Bank-System-Microservices.postman_collection_v2.json`.
 2. Ejecutar primero **`POST /auth/login`**: guarda el token en la variable de colección
    `{{token}}` y el resto de peticiones lo usan en `Authorization: Bearer {{token}}`.
 3. Revisar la colección: incluye escenarios de éxito y de error para clientes, cuentas,
