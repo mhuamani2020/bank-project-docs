@@ -207,3 +207,31 @@ docker compose down
 Cada microservicio incluye **pruebas unitarias** de los nuevos métodos públicos con *mocks*.
 El reporte de cobertura se genera con **JaCoCo** al ejecutar `mvnw test` y queda en
 `target/site/jacoco/index.html` de cada repositorio.
+
+Además existe un **[reporte de cobertura consolidado](docs/coverage/coverage-report.md)**
+que agrega los 9 módulos (no hay un `pom.xml` raíz, así que cada proyecto se compila por
+separado). Resumen:
+
+| Métrica | Resultado |
+|---|---|
+| **Pruebas ejecutadas** | **269** · 0 fallos · 0 errores |
+| **Líneas cubiertas** | **88.9%** (1.291 / 1.452) |
+| **Ramas cubiertas** | **70.8%** (255 / 360) |
+| **Métodos cubiertos** | **87.5%** (407 / 465) |
+| Clases analizadas | 72 |
+
+| Módulo | Tests | Líneas |
+|---|---:|---:|
+| `bank-account-service` | 119 | 95.2% |
+| `credit-service` | 67 | 94.3% |
+| `customer-service` | 27 | 93.8% |
+| `yanki-service` | 37 | 84.8% |
+| `bank-resilience-commons` | 5 | 88.6% |
+| `auth-service` | 12 | 42.1% |
+| `discovery-server` | 1 | 33.3% |
+| `api-gateway` | 1 | 33.3% |
+| `config-server` | — | sin pruebas |
+
+> Los datos por clase están en [`docs/coverage/jacoco-consolidado.csv`](docs/coverage/jacoco-consolidado.csv),
+> y el informe metodológico (exclusiones, cómo regenerar) en
+> [`docs/coverage/coverage-report.md`](docs/coverage/coverage-report.md).
