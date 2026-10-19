@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-10-19T00:00:00.000Z" agent="opencode" version="24.0.0" type="device">
+  <diagram id="seq-debitcards-19" name="Secuencia - Tarjetas de Debito">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1145" pageHeight="980" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Tarjetas de débito: emisión, pago y movimientos (US-34 a US-36)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=18;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="222" y="0" width="700" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="l-cli" value="Cliente&lt;br/&gt;(HTTP + JWT)" style="shape=umlLifeline;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#FFE6CC;strokeColor=#D79B00;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="40" y="40" width="150" height="760" as="geometry" />
+        </mxCell>
+        <mxCell id="l-gw" value="API Gateway&lt;br/&gt;:8089" style="shape=umlLifeline;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="255" y="40" width="150" height="760" as="geometry" />
+        </mxCell>
+        <mxCell id="l-bas" value="bank-account-service&lt;br/&gt;(RxJava 3)" style="shape=umlLifeline;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="470" y="40" width="150" height="760" as="geometry" />
+        </mxCell>
+        <mxCell id="l-db" value="MongoDB&lt;br/&gt;debit_cards + bank_accounts" style="shape=umlLifeline;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#D5E8D4;strokeColor=#82B366;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="685" y="40" width="150" height="760" as="geometry" />
+        </mxCell>
+        <mxCell id="l-kafka" value="Kafka&lt;br/&gt;bank-account-transactions" style="shape=umlLifeline;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#E1D5E7;strokeColor=#9673A6;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="900" y="40" width="150" height="760" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" value="1. POST /debit-cards {accountId, status}" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;verticalAlign=bottom;exitX=0.5;exitY=0.11;entryX=0.5;entryY=0.11;" parent="1" source="l-cli" target="l-gw" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="2. Enrutamiento /debit-cards/** con JWT" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;verticalAlign=bottom;exitX=0.5;exitY=0.18;entryX=0.5;entryY=0.18;" parent="1" source="l-gw" target="l-bas" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m3" value="3. Valida la cuenta (400), que no sea FIXED_TERM (400) y una tarjeta por cuenta (400)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;verticalAlign=bottom;exitX=0.5;exitY=0.24;entryX=0.5;entryY=0.24;" parent="1" source="l-bas" target="l-db" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m4" value="4. save en debit_cards (genera cardNumber, estado ACTIVE por defecto)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;verticalAlign=bottom;exitX=0.5;exitY=0.31;entryX=0.5;entryY=0.31;" parent="1" source="l-bas" target="l-db" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m5" value="5. 201 Created" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;dashed=1;verticalAlign=bottom;exitX=0.5;exitY=0.37;entryX=0.5;entryY=0.37;" parent="1" source="l-bas" target="l-gw" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m6" value="6. JSON de la tarjeta emitida" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;dashed=1;verticalAlign=bottom;exitX=0.5;exitY=0.44;entryX=0.5;entryY=0.44;" parent="1" source="l-gw" target="l-cli" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m7" value="7. POST /debit-cards/{id}/payments {amount, description}" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;verticalAlign=bottom;exitX=0.5;exitY=0.50;entryX=0.5;entryY=0.50;" parent="1" source="l-cli" target="l-gw" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m8" value="8. Valida la tarjeta ACTIVE (400 si BLOCKED) y amount &gt; 0" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;verticalAlign=bottom;exitX=0.5;exitY=0.56;entryX=0.5;entryY=0.56;" parent="1" source="l-bas" target="l-db" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m9" value="9. DEBIT_CARD_PAYMENT en la cuenta asociada: comisiones, saldo y movimiento (400 si saldo insuficiente)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;verticalAlign=bottom;exitX=0.5;exitY=0.63;entryX=0.5;entryY=0.63;" parent="1" source="l-bas" target="l-db" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m10" value="10. Publica el movimiento (best-effort)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;verticalAlign=bottom;exitX=0.5;exitY=0.69;entryX=0.5;entryY=0.69;" parent="1" source="l-bas" target="l-kafka" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m11" value="11. Relee la cuenta para calcular balanceAfter" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;verticalAlign=bottom;exitX=0.5;exitY=0.76;entryX=0.5;entryY=0.76;" parent="1" source="l-bas" target="l-db" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m12" value="12. 201 {transactionId, amount, fee, balanceAfter, paymentDate}" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;dashed=1;verticalAlign=bottom;exitX=0.5;exitY=0.82;entryX=0.5;entryY=0.82;" parent="1" source="l-bas" target="l-gw" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m13" value="13. JSON del pago con la tarjeta" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;dashed=1;verticalAlign=bottom;exitX=0.5;exitY=0.89;entryX=0.5;entryY=0.89;" parent="1" source="l-gw" target="l-cli" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m14" value="14. GET /debit-cards/{id}/movements y GET /debit-cards/customer/{customerId} → 200" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;dashed=1;verticalAlign=bottom;exitX=0.5;exitY=0.95;entryX=0.5;entryY=0.95;" parent="1" source="l-bas" target="l-gw" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="note" value="Endpoints cubiertos: GET /debit-cards (200), POST /debit-cards (201 / 400), GET /debit-cards/{id} (200 / 404), PUT /debit-cards/{id} (200 / 404, bloquear o activar), DELETE (204), GET /debit-cards/customer/{customerId} (200), POST /debit-cards/{id}/payments (201 / 400) y GET /debit-cards/{id}/movements (200).&lt;br/&gt;- El pago delega en TransactionServiceImpl: aplica las mismas comisiones y controles de saldo que un retiro normal (US-25).&lt;br/&gt;- Reporte de los últimos 10 movimientos de la tarjeta → diagrama 20 (US-28)." style="text;html=1;align=left;verticalAlign=top;fillColor=#FFF2CC;strokeColor=#D6B656;rounded=1;spacing=6;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="192" y="815" width="760" height="150" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

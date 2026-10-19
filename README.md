@@ -10,7 +10,7 @@ exige el enunciado; aquí solo se versionan la documentación y los artefactos d
 
 | Ruta | Descripción |
 |---|---|
-| `docs/diagrams/` | Diagramas en formato **draw.io (XML)**: diseño de la solución, diagramas de secuencia por microservicio y diagramas UML (clases y casos de uso). |
+| `docs/diagrams/` | Diagramas en formato **draw.io (XML)**: diseño de la solución, diagramas de secuencia por microservicio y por requerimiento (58 endpoints) y diagramas UML (clases y casos de uso). |
 | `docs/historias-de-usuario.md` | Cada funcionalidad del sistema descrita como **historia de usuario** con sus criterios de aceptación. |
 | `bank-postman/` | Repositorio dedicado con la colección de **Postman**: escenarios de éxito y de validación de reglas de negocio de todos los servicios, incluido el login JWT. |
 | `docker-compose.yml` | Orquestación de **todos los contenedores**: infraestructura (MongoDB, Kafka, Redis), plataforma (discovery, config, gateway) y microservicios de negocio. |
