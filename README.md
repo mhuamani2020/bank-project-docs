@@ -182,8 +182,9 @@ docker compose down
 - Cada microservicio apunta al config-server con
   `SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888` y a Eureka con
   `EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka/`.
-- `api-gateway` no usa config-server (su `application.yml` es local); solo se le ajusta la URL
-  de Eureka por variable de entorno.
+- `api-gateway` también obtiene su configuración (puerto y rutas de Spring Cloud Gateway) del
+  config-server mediante `SPRING_CONFIG_IMPORT`; solo la URL de Eureka se ajusta por variable
+  de entorno.
 - El arranque se ordena con `depends_on` + *healthchecks* (`service_healthy`), de modo que los
   servicios esperan a MongoDB/Redis/Kafka y a la plataforma antes de iniciar.
 
@@ -214,29 +215,29 @@ separado). Resumen:
 
 | Métrica | Resultado |
 |---|---|
-| **Pruebas ejecutadas** | **269** · 0 fallos · 0 errores |
-| **Líneas cubiertas** | **89.1%** (1.289 / 1.446) |
-| **Ramas cubiertas** | **70.8%** (255 / 360) |
-| **Métodos cubiertos** | **87.9%** (405 / 461) |
+| **Pruebas ejecutadas** | **296** · 0 fallos · 0 errores |
+| **Líneas cubiertas** | **93.2%** (1.379 / 1.480) |
+| **Ramas cubiertas** | **72.2%** (273 / 378) |
+| **Métodos cubiertos** | **91.3%** (430 / 471) |
 | Clases analizadas | 70 |
 
 | Módulo | Tests | Líneas |
 |---|---:|---:|
 | `bank-account-service` | 119 | 95.2% |
+| `auth-service` | 26 | 94.4% |
 | `credit-service` | 67 | 94.3% |
 | `customer-service` | 27 | 93.8% |
 | `bank-resilience-commons` | 5 | 88.6% |
-| `yanki-service` | 37 | 84.8% |
-| `auth-service` | 12 | 42.1% |
+| `yanki-service` | 48 | 86.8% |
 | `discovery-server` | 1 | n/a |
 | `api-gateway` | 1 | n/a |
-| `config-server` | — | sin pruebas |
+| `config-server` | 2 | n/a |
 
 > Los **9 módulos declaran las mismas exclusiones** (`**/dto/**`, `**/model/**`,
 > `**/*Application*` y `com/sun/tools/**`), de modo que los porcentajes son comparables
-> entre sí. Por eso `discovery-server` y `api-gateway` figuran como **`n/a`**: sus tests
-> corren y validan, pero su única clase es la principal `*Application` (plumbing de Spring
-> Boot), excluida en todos los módulos; `config-server` no tiene carpeta `src/test`.
+> entre sí. Por eso `discovery-server`, `config-server` y `api-gateway` figuran como
+> **`n/a`**: sus tests corren y validan, pero su única clase es la principal
+> `*Application` (plumbing de Spring Boot), excluida en todos los módulos.
 
 > Los datos por clase están en [`docs/coverage/jacoco-consolidado.csv`](docs/coverage/jacoco-consolidado.csv),
 > y el informe metodológico (exclusiones, cómo regenerar) en

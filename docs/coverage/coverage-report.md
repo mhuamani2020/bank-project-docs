@@ -5,7 +5,7 @@
 > informe agrega los reportes individuales que genera el plugin `jacoco-maven-plugin`
 > en cada módulo durante la fase `test`.
 
-**Generado:** 2026-10-19 15:24 UTC  
+**Generado:** 2026-10-19 16:11 UTC  
 **Plugin:** `jacoco-maven-plugin` 0.8.11  
 **Comando por módulo:** `mvnw clean verify` (commons: `mvnw clean install`)  
 **Reporte HTML individual:** `<modulo>/target/site/jacoco/index.html`
@@ -16,13 +16,13 @@
 
 | Métrica | Cubierto | No cubierto | Total | Cobertura |
 |---|---:|---:|---:|---:|
-| **Líneas** | 1,289 | 157 | 1,446 | **89.1%** |
-| **Ramas** | 255 | 105 | 360 | **70.8%** |
-| Instrucciones | 6,058 | 741 | 6,799 | 89.1% |
-| Métodos | 405 | 56 | 461 | 87.9% |
-| Complejidad ciclomática | 488 | 153 | 641 | 76.1% |
+| **Líneas** | 1,379 | 101 | 1,480 | **93.2%** |
+| **Ramas** | 273 | 105 | 378 | **72.2%** |
+| Instrucciones | 6,476 | 505 | 6,981 | 92.8% |
+| Métodos | 430 | 41 | 471 | 91.3% |
+| Complejidad ciclomática | 520 | 140 | 660 | 78.8% |
 
-**Pruebas ejecutadas:** 269 · **fallos:** 0 · **errores:** 0
+**Pruebas ejecutadas:** 296 · **fallos:** 0 · **errores:** 0
 
 ## 2. Cobertura por módulo
 
@@ -30,22 +30,20 @@
 |---|---|---:|---:|---:|---:|---:|---:|
 | `bank-resilience-commons` | Librería compartida | 5 | 5 | 88.6% | — | 75.0% | 87.1% |
 | `discovery-server` | Infraestructura | 1 | — | n/a | n/a | n/a | n/a |
-| `config-server` | Infraestructura | — | — | sin pruebas | sin pruebas | sin pruebas | sin pruebas |
-| `auth-service` | Microservicio | 12 | 8 | 42.1% | 69.2% | 50.0% | 45.6% |
+| `config-server` | Infraestructura | 2 | — | n/a | n/a | n/a | n/a |
+| `auth-service` | Microservicio | 26 | 8 | 94.4% | 84.6% | 94.1% | 94.8% |
 | `customer-service` | Microservicio | 27 | 8 | 93.8% | 50.0% | 93.2% | 93.9% |
 | `bank-account-service` | Microservicio | 119 | 24 | 95.2% | 73.1% | 94.4% | 94.6% |
 | `credit-service` | Microservicio | 67 | 15 | 94.3% | 66.2% | 92.9% | 93.2% |
-| `yanki-service` | Microservicio | 37 | 10 | 84.8% | 72.9% | 81.4% | 85.1% |
+| `yanki-service` | Microservicio | 48 | 10 | 86.8% | 73.9% | 83.8% | 87.3% |
 | `api-gateway` | Infraestructura | 1 | — | n/a | n/a | n/a | n/a |
 
 > **`n/a` = el módulo tiene pruebas pero ninguna clase analizable.** Sus clases
 > quedan fuera por el criterio de exclusión unificado (la única es la principal
 > `*Application`, que es *plumbing* de Spring Boot sin lógica de negocio verificable):
-> `discovery-server` y `api-gateway` ejecutan 1 test cada uno (carga de contexto) que
-> sigue corriendo y validando, pero no aporta líneas instrumentables.
->
-> **`sin pruebas` = `config-server`** no tiene carpeta `src/test`: es un módulo de
-> infraestructura que solo expone la configuración centralizada.
+> `discovery-server`, `config-server` y `api-gateway` ejecutan pruebas de carga de
+> contexto (1, 2 y 1 respectivamente) que siguen corriendo y validando, pero no
+> aportan líneas instrumentables.
 
 ## 3. Detalle por módulo
 
@@ -63,26 +61,26 @@
 
 ### `discovery-server`
 
-_1 prueba(s) ejecutada(s), pero **ninguna clase analizable**: su única clase es la principal `*Application`, que queda fuera por el criterio unificado de exclusiones. El test sigue corriendo y validando (carga de contexto).
+_1 prueba(s) ejecutada(s), pero **ninguna clase analizable**: su única clase es la principal `*Application`, que queda fuera por el criterio unificado de exclusiones. Las pruebas siguen corriendo y validando (carga de contexto y, cuando aplica, resolución de propiedades de configuración).
 
 ### `config-server`
 
-_Sin pruebas: el módulo no tiene carpeta `src/test`._
+_2 prueba(s) ejecutada(s), pero **ninguna clase analizable**: su única clase es la principal `*Application`, que queda fuera por el criterio unificado de exclusiones. Las pruebas siguen corriendo y validando (carga de contexto y, cuando aplica, resolución de propiedades de configuración).
 
 ### `auth-service`
 
-**Total:** 42.1% de líneas · 69.2% de ramas · 50.0% de métodos
+**Total:** 94.4% de líneas · 84.6% de ramas · 94.1% de métodos
 
 | Paquete | Clase | Líneas cub. / tot. | Líneas % | Ramas % | Métodos % |
 |---|---|---:|---:|---:|---:|
 | `com.nttdata.auth_service.api` | `ApiUtil` | 0 / 6 | 0.0% | — | 0.0% |
 | `com.nttdata.auth_service.mapper` | `AuthMapper` | 5 / 5 | 100.0% | — | 100.0% |
-| `com.nttdata.auth_service.security` | `JwtService` | 1 / 18 | 5.6% | 0.0% | 50.0% |
+| `com.nttdata.auth_service.security` | `JwtService` | 18 / 18 | 100.0% | 100.0% | 100.0% |
 | `com.nttdata.auth_service.exception` | `InvalidCredentialsException` | 2 / 2 | 100.0% | — | 100.0% |
 | `com.nttdata.auth_service.service.impl` | `AuthServiceImpl` | 28 / 28 | 100.0% | 81.8% | 100.0% |
 | `com.nttdata.auth_service.controller` | `AuthController` | 9 / 9 | 100.0% | — | 100.0% |
-| `com.nttdata.auth_service.config` | `DataInitializer` | 0 / 13 | 0.0% | 0.0% | 0.0% |
-| `com.nttdata.auth_service.config` | `SecurityConfig` | 0 / 26 | 0.0% | — | 0.0% |
+| `com.nttdata.auth_service.config` | `DataInitializer` | 13 / 13 | 100.0% | 100.0% | 100.0% |
+| `com.nttdata.auth_service.config` | `SecurityConfig` | 26 / 26 | 100.0% | — | 100.0% |
 
 ### `customer-service`
 
@@ -154,15 +152,15 @@ _Sin pruebas: el módulo no tiene carpeta `src/test`._
 
 ### `yanki-service`
 
-**Total:** 84.8% de líneas · 72.9% de ramas · 81.4% de métodos
+**Total:** 86.8% de líneas · 73.9% de ramas · 83.8% de métodos
 
 | Paquete | Clase | Líneas cub. / tot. | Líneas % | Ramas % | Métodos % |
 |---|---|---:|---:|---:|---:|
 | `com.nttdata.yanki_service.api` | `ApiUtil` | 0 / 6 | 0.0% | — | 0.0% |
 | `com.nttdata.yanki_service.enums` | `WalletOperationType` | 3 / 3 | 100.0% | — | 100.0% |
 | `com.nttdata.yanki_service.enums` | `WalletOperationStatus` | 4 / 4 | 100.0% | — | 100.0% |
-| `com.nttdata.yanki_service.service.impl` | `WalletServiceImpl` | 92 / 92 | 100.0% | 71.4% | 100.0% |
-| `com.nttdata.yanki_service.controller` | `WalletController` | 30 / 32 | 93.8% | — | 94.1% |
+| `com.nttdata.yanki_service.service.impl` | `WalletServiceImpl` | 116 / 116 | 100.0% | 72.2% | 100.0% |
+| `com.nttdata.yanki_service.controller` | `WalletController` | 40 / 42 | 95.2% | 100.0% | 95.2% |
 | `com.nttdata.yanki_service.config` | `KafkaConfig` | 0 / 3 | 0.0% | — | 0.0% |
 | `com.nttdata.yanki_service.config` | `SecurityConfig` | 0 / 22 | 0.0% | — | 0.0% |
 | `com.nttdata.yanki_service.messaging` | `WalletOperationResultConsumer` | 38 / 38 | 100.0% | 83.3% | 100.0% |
@@ -171,7 +169,7 @@ _Sin pruebas: el módulo no tiene carpeta `src/test`._
 
 ### `api-gateway`
 
-_1 prueba(s) ejecutada(s), pero **ninguna clase analizable**: su única clase es la principal `*Application`, que queda fuera por el criterio unificado de exclusiones. El test sigue corriendo y validando (carga de contexto).
+_1 prueba(s) ejecutada(s), pero **ninguna clase analizable**: su única clase es la principal `*Application`, que queda fuera por el criterio unificado de exclusiones. Las pruebas siguen corriendo y validando (carga de contexto y, cuando aplica, resolución de propiedades de configuración).
 
 ---
 
@@ -201,5 +199,5 @@ _1 prueba(s) ejecutada(s), pero **ninguna clase analizable**: su única clase es
 | Archivo | Contenido |
 |---|---|
 | `coverage-report.md` | Este informe consolidado. |
-| `jacoco-consolidado.csv` | Datos por clase de los 8 módulos con pruebas (para gráficas o importar a Excel). |
+| `jacoco-consolidado.csv` | Datos por clase de los 6 módulos con clases analizables (para gráficas o importar a Excel). |
 
